@@ -32,7 +32,7 @@ const Home = () => {
         </div>
 
         <div className="p-5 mt-10">
-          <div className="flex max-w-md mx-auto items-center border border-gray-300 rounded-md">
+          <div className=" bg-slate-50 flex max-w-md mx-auto items-center border border-gray-300 rounded-md">
             <input
               type="text"
               value={searchQuery}
