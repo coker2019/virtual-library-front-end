@@ -37,13 +37,13 @@ const Home = () => {
       <Header />
       <div className="min-h-screen bg-orange-200">
         <div className="justify-center items-center p-5 mt-16">
-          <h1 className="text-3xl text-center font-bold mt-5">Welcome to the Library</h1>
+          <h1 className="text-3xl text-center font-bold mt-10">Welcome to the Library</h1>
           <p className="mt-4 text-lg text-center">Explore our collection of books.</p>
         </div>
 
         <div className="p-5 mt-10">
           <div className="flex flex-col items-center">
-            <div className="bg-slate-50 flex w-[50%] mx-auto items-center border border-gray-300 rounded-lg">
+            <div className="bg-slate-50 flex w-[50%] mx-auto items-center border border-gray-700 ring-primaryBlack rounded-lg">
               <input
                 type="text"
                 value={searchQuery}
