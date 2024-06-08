@@ -13,9 +13,9 @@ const App = () => {
   return (
    
       <Routes>
+        <Route path="/" element={<PublicRoute><Register /></PublicRoute>} />
         <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
-        <Route path="/register" element={<PublicRoute><Register /></PublicRoute>} />
-        <Route path="/" element={<PrivateRoute><Home /></PrivateRoute>} />
+        <Route path="/home" element={<PrivateRoute><Home /></PrivateRoute>} />
         <Route path="/book/:id" element={<PrivateRoute><BookDetails /></PrivateRoute>} />
         <Route path="/header" element={<PrivateRoute><Header /></PrivateRoute>} />
         
