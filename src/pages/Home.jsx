@@ -64,8 +64,8 @@ const Home = () => {
               className="mt-4 p-2 border border-gray-300 rounded-lg"
             >
               <option value="">All Categories</option>
-              <option value="Fiction">Fiction</option>
-              <option value="Non-Fiction">Non-Fiction</option>
+              <option value="Chemistry">Chemistry</option>
+              <option value="Physics">Physics</option>
               <option value="Science">Science</option>
               <option value="History">History</option>
               {/* Add more categories as needed */}
