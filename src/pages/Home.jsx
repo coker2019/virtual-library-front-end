@@ -7,7 +7,7 @@ import { images } from '../Assets';
 const Home = () => {
   const [searchQuery, setSearchQuery] = useState('');
 
-  // Get the list of books from Redux store
+ 
   const books = useSelector((state) => state.books) || [];
 
   // Function to handle changes in the search input
@@ -15,7 +15,7 @@ const Home = () => {
     setSearchQuery(e.target.value);
   };
 
-  // Filter the list of books based on the search query
+  // Filter the list of books based on the search query i.e search base on category
   const filteredBooks = books.filter((book) =>
     book.title.toLowerCase().includes(searchQuery.toLowerCase())
   );
