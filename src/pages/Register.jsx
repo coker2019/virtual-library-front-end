@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 
 const Register = () => {
   const dispatch = useDispatch();
-  const [userData, setUserData] = useState({ username: '', email: '', password: '', confirmPassword: '' });
+  const [userData, setUserData] = useState({ email: '', password: '', confirmPassword: '' });
   const [passwordError, setPasswordError] = useState('');
   const { loading, error } = useSelector((state) => state.auth);
 
@@ -21,7 +21,7 @@ const Register = () => {
     }
     setPasswordError('');
     dispatch(registerUser({
-      username: userData.username,
+     
       email: userData.email,
       password: userData.password,
     }));
@@ -33,17 +33,7 @@ const Register = () => {
         <h1 className="text-xl font-bold text-center mb-4">Register</h1>
         {error && <p className="text-red-500">{error}</p>}
         {passwordError && <p className="text-red-500">{passwordError}</p>}
-        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="username">
-          Username
-        </label>
-        <input
-          type="text"
-          name="username"
-          placeholder="Username"
-          value={userData.username}
-          onChange={handleChange}
-          className="mb-2 p-2 border font-normal rounded-full w-full"
-        />
+    
         <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
           Email
         </label>

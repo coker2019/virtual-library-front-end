@@ -7,7 +7,7 @@ import { Link, useNavigate } from "react-router-dom";
 const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [credentials, setCredentials] = useState({ username: '', password: '' });
+  const [credentials, setCredentials] = useState({ email: '', password: '' });
   const { isAuthenticated, loading, error } = useSelector((state) => state.auth);
 
   const handleChange = (e) => {
@@ -30,14 +30,14 @@ const Login = () => {
       <form className="bg-gray-200 shadow-md px-8 pt-6 pb-8 m-4 md:w-[40%]" onSubmit={handleSubmit}>
         <h1 className="text-xl font-bold text-center mb-4">Login Your Account</h1>
         {error && <p className="text-red-500">{error}</p>}
-        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="username">
-          Username
+        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
+          Email
         </label>
         <input
           type="text"
-          name="username"
-          placeholder="Username"
-          value={credentials.username}
+          name="Email"
+          placeholder="Email"
+          value={credentials.email}
           onChange={handleChange}
           className="mb-2 p-2 border font-normal rounded-full w-full"
         />
