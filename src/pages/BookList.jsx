@@ -15,7 +15,7 @@ const BookList = () => {
   if (error) return <p>{error}</p>;
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
+    <div className=" bg-gray-700 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
       {books.map((book) => (
         <div key={book.id} className="bg-white p-4 shadow-md rounded-md">
           <h3 className="text-lg font-bold">{book.title}</h3>

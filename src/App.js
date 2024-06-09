@@ -6,7 +6,8 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import PrivateRoute from './components/PrivateRoute';
 import PublicRoute from './components/PublicRoute';
-import Header from './components/Header';
+import BookList from './pages/BookList';
+
 import Categories from './pages/Categories';
 
 
@@ -18,7 +19,7 @@ const App = () => {
         <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
         <Route path="/home" element={<PrivateRoute><Home /></PrivateRoute>} />
         <Route path="/categories" element={<PrivateRoute><Categories /></PrivateRoute>} />
-        <Route path="/header" element={<PrivateRoute><Header /></PrivateRoute>} />
+        <Route path="/book-list" element={<PrivateRoute><BookList /></PrivateRoute>} />
         
 
       </Routes>

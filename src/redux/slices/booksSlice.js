@@ -1,6 +1,5 @@
-// src/redux/slices/booksSlice.js
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { booksAPI } from '../../axiosConfig';
+import axiosInstance from '../../axiosConfig';
 
 const initialState = {
   books: [],
@@ -12,19 +11,7 @@ export const fetchBooks = createAsyncThunk(
   'books/fetchBooks',
   async (_, { rejectWithValue }) => {
     try {
-      const response = await booksAPI.fetchBooks();
-      return response.data;
-    } catch (error) {
-      return rejectWithValue(error.response.data);
-    }
-  }
-);
-
-export const addBook = createAsyncThunk(
-  'books/addBook',
-  async (bookData, { rejectWithValue }) => {
-    try {
-      const response = await booksAPI.addBook(bookData);
+      const response = await axiosInstance.get('/books');
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -35,6 +22,11 @@ export const addBook = createAsyncThunk(
 const booksSlice = createSlice({
   name: 'books',
   initialState,
+  reducers: {
+    setBooks(state, action) {
+      state.books = action.payload;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchBooks.pending, (state) => {
@@ -48,20 +40,9 @@ const booksSlice = createSlice({
       .addCase(fetchBooks.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-      })
-      .addCase(addBook.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(addBook.fulfilled, (state, action) => {
-        state.books.push(action.payload);
-        state.loading = false;
-      })
-      .addCase(addBook.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
       });
   },
 });
 
+export const { setBooks } = booksSlice.actions;
 export default booksSlice.reducer;

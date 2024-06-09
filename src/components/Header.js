@@ -22,7 +22,7 @@ const Header = () => {
     </div>
       <ul className="hidden md:flex">
         <div className="text-lg font-bold container gap-5 flex justify-between items-center">
-          <Link to="/" className="flex items-center hover:border-b-2 hover:border-customGreen">
+          <Link to="/book-list" className="flex items-center hover:border-b-2 hover:border-customGreen">
             List of Books
           </Link>
           <Link to="/" className="flex items-center hover:border-b-2 hover:border-customGreen">
@@ -57,7 +57,7 @@ const Header = () => {
     </div>
         <ul className="p-8 text-2xl">
           <div className="text-lg font-bold container gap-5 flex flex-col justify-between items-center">
-            <Link to="/" className="flex items-center">
+            <Link to="/book-list" className="flex items-center">
               List of Books
             </Link>
             <Link to="/" className="flex items-center">
