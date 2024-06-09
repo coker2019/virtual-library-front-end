@@ -1,5 +1,6 @@
+// src/redux/slices/authSlice.js
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axiosInstance from '../../axiosConfig';
+import { authAPI } from '../../axiosConfig';
 
 const initialState = {
   isAuthenticated: false,
@@ -12,8 +13,8 @@ export const loginUser = createAsyncThunk(
   'auth/loginUser',
   async (credentials, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.post('/login', credentials);
-      localStorage.setItem('token', response.data.token); // Save token to localStorage
+      const response = await authAPI.login(credentials);
+      localStorage.setItem('token', response.data.token);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -25,8 +26,8 @@ export const registerUser = createAsyncThunk(
   'auth/registerUser',
   async (userData, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.post('/register', userData);
-      localStorage.setItem('token', response.data.token); // Save token to localStorage
+      const response = await authAPI.register(userData);
+      localStorage.setItem('token', response.data.token);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);

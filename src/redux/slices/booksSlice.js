@@ -1,6 +1,6 @@
 // src/redux/slices/booksSlice.js
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axiosInstance from '../../axiosConfig';
+import { booksAPI } from '../../axiosConfig';
 
 const initialState = {
   books: [],
@@ -12,7 +12,7 @@ export const fetchBooks = createAsyncThunk(
   'books/fetchBooks',
   async (_, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.get('/books');
+      const response = await booksAPI.fetchBooks();
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -24,7 +24,7 @@ export const addBook = createAsyncThunk(
   'books/addBook',
   async (bookData, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.post('/books', bookData);
+      const response = await booksAPI.addBook(bookData);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
