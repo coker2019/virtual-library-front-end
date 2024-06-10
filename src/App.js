@@ -7,6 +7,8 @@ import PrivateRoute from './components/PrivateRoute';
 import PublicRoute from './components/PublicRoute';
 import BookList from './pages/BookList';
 import Categories from './pages/Categories';
+import BorrowedBooks from './pages/BorrowedBooks';
+import ReservedBooks from './pages/ReservedBooks';
 
 
 const App = () => {
@@ -18,6 +20,8 @@ const App = () => {
         <Route path="/home" element={<PrivateRoute><Home /></PrivateRoute>} />
         <Route path="/categories" element={<PrivateRoute><Categories /></PrivateRoute>} />
         <Route path="/book-list" element={<PrivateRoute><BookList /></PrivateRoute>} />
+        <Route path="/borrowed-books" element={<PrivateRoute><BorrowedBooks /></PrivateRoute>} />
+        <Route path="/reserved-books" element={<PrivateRoute><ReservedBooks /></PrivateRoute>} />
         
 
       </Routes>

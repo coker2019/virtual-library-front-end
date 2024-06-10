@@ -30,4 +30,12 @@ export const booksAPI = {
   addBook: (bookData) => axiosInstance.post('/books', bookData),
 };
 
+export const borrowedBooksAPI = {
+  fetchBorrowedBooks: () => axiosInstance.get('/borrowed-books'),
+};
+
+export const reservedBooksAPI = {
+  fetchReservedBooks: () => axiosInstance.get('/reserved-books'),
+};
+
 export default axiosInstance;

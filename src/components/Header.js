@@ -25,10 +25,10 @@ const Header = () => {
           <Link to="/book-list" className="flex items-center hover:border-b-2 hover:border-customGreen">
             List of Books
           </Link>
-          <Link to="/" className="flex items-center hover:border-b-2 hover:border-customGreen">
+          <Link to="/reserved-books" className="flex items-center hover:border-b-2 hover:border-customGreen">
             Reserved Books
           </Link>
-          <Link to="/" className="flex items-center hover:border-b-2 hover:border-customGreen">
+          <Link to="/borrowed-books" className="flex items-center hover:border-b-2 hover:border-customGreen">
             Borrowed Books
           </Link>
           <Link to="/profile" className="flex items-center mr-4">
@@ -60,10 +60,10 @@ const Header = () => {
             <Link to="/book-list" className="flex items-center">
               List of Books
             </Link>
-            <Link to="/" className="flex items-center">
+            <Link to="/reserved-books" className="flex items-center">
             Reserved Books
             </Link>
-            <Link to="/" className="flex items-center">
+            <Link to="/borrowed-books" className="flex items-center">
             Borrowed Books
             </Link>
             <Link to="/profile" className="flex items-center ml-5">
