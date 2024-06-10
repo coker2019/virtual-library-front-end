@@ -1,8 +1,7 @@
-
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { loginUser } from '../redux/slices/authSlice';
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from 'react-router-dom';
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -34,8 +33,8 @@ const Login = () => {
           Email
         </label>
         <input
-          type="text"
-          name="Email"
+          type="email"
+          name="email"
           placeholder="Email"
           value={credentials.email}
           onChange={handleChange}
@@ -66,4 +65,3 @@ const Login = () => {
 };
 
 export default Login;
-
