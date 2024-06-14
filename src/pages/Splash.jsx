@@ -18,11 +18,14 @@ const Splash = () => {
           <button
             onClick={() => navigate("/login")}
             className="bg-customGreen hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
-            Start Reading
+            Let's Get Started
           </button>
         </div>
         <p className="text-sm text-gray-600 mt-4">
-          Not sure where to begin? Check out our recommended reads!
+          Not sure where to begin?{" "}
+          <span className="text-primaryGreen">
+            Check out our recommended reads!
+          </span>
         </p>
       </div>
     </div>

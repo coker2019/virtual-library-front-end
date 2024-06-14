@@ -1,30 +1,53 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { loginUser } from "../redux/slices/authSlice";
+import { loginUser, updateLoginStatus } from "../redux/slices/authSlice";
 import { Link, useNavigate } from "react-router-dom";
 
 const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [credentials, setCredentials] = useState({ email: "", password: "" });
-  const { isAuthenticated, loading, error } = useSelector(
-    (state) => state.auth
-  );
+  const [showErr, setShowErr] = useState("");
+  const { loading, error } = useSelector((state) => state.auth);
 
   const handleChange = (e) => {
-    setCredentials({ ...credentials, [e.target.name]: e.target.value });
+    setCredentials({
+      ...credentials,
+      [e.target.name]: e.target.value,
+    });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(loginUser(credentials));
+    dispatch(loginUser(credentials)).then((resultAction) => {
+      const { payload } = resultAction;
+
+      if (loginUser.fulfilled.match(resultAction)) {
+        dispatch(
+          updateLoginStatus(
+            payload.status.message === "Signed in Successfully"
+              ? "success"
+              : "failed"
+          )
+        );
+        navigate("/home");
+        setCredentials({
+          email: "",
+          password: "",
+        });
+      }
+    });
   };
 
   useEffect(() => {
-    if (isAuthenticated) {
-      navigate("/categories");
+    if (error !== null) {
+      setShowErr(error);
     }
-  }, [isAuthenticated, navigate]);
+    let showErrTimer = setTimeout(() => {
+      setShowErr(null);
+    }, 3000);
+    return () => clearTimeout(showErrTimer);
+  }, [error]);
 
   return (
     <div className="bg-library-pattern bg-cover bg-center bg-no-repeat flex justify-center items-center  min-h-screen bg-white ">
@@ -33,7 +56,9 @@ const Login = () => {
           <h1 className="text-xl font-bold text-center mb-4">
             Login Your Account
           </h1>
-          {error && <p className="text-red-500">{error}</p>}
+          {showErr && showErr !== null && (
+            <p className="text-red-500 text-sm">{showErr}</p>
+          )}
           <input
             type="email"
             name="email"
@@ -52,7 +77,8 @@ const Login = () => {
           />
           <button
             type="submit"
-            className="bg-customGreen shadow-md p-2 border font-semibold mt-5 rounded-full w-full-500 text-white w-full">
+            disabled={loading}
+            className="bg-customGreen shadow-md p-2 border font-semibold mt-5 rounded-full w-full-500 text-white w-full ">
             {loading ? "Loading..." : "Login"}
           </button>
           <div className="flex justify-between">

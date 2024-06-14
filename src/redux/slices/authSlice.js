@@ -1,36 +1,41 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
-const BASE_URL = "https://localhost:3000/users";
+const BASE_URL = "http://localhost:3000/users";
 
 const initialState = {
   isAuthenticated: null,
   user: [],
   loading: false,
   error: null,
+  registrationStatus: null,
+  loginStatus: null,
+  status: null,
 };
 
 export const registerUser = createAsyncThunk(
   "user/registerUser",
   async (userData, { rejectWithValue }) => {
     try {
-      const response = await axios.post(BASE_URL, userData);
-      const token = response.header.authorization;
+      const response = await axios.post(BASE_URL, { user: userData });
+      const token = response.headers.authorization;
       localStorage.setItem("token", token);
       const currentUserData = JSON.stringify(response.data.status.data);
       localStorage.setItem("currentUser", currentUserData);
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.response.data);
+      throw new Error(error.response.data.message);
     }
   }
 );
 
 export const loginUser = createAsyncThunk(
-  "user/loginUser",
+  "users/loginUser",
   async (credentials, { rejectWithValue }) => {
     try {
-      const response = await axios.post(`${BASE_URL}/sign_in`, credentials);
+      const response = await axios.post(`${BASE_URL}/sign_in`, {
+        user: credentials,
+      });
 
       if (response.status === 200) {
         const authToken = response.headers.authorization;
@@ -40,28 +45,24 @@ export const loginUser = createAsyncThunk(
       }
       return response.data;
     } catch (error) {
+      console.log("error", error);
       return rejectWithValue(error.response.data);
     }
   }
 );
 
-export const logoutUser = createAsyncThunk(
-  "user/logoutUser",
-  async ({ rejectWithValue }) => {
-    const authToken = localStorage.getItem("token");
+export const logoutUser = createAsyncThunk("user/logoutUser", async () => {
+  const authToken = localStorage.getItem("token");
 
-    try {
-      const response = await axios.delete(`${BASE_URL}/sign_out`, {
-        headers: {
-          Authorization: authToken,
-        },
-      });
-      return response.data;
-    } catch (error) {
-      return rejectWithValue(error.message);
-    }
+  try {
+    const response = await axios.delete(`${BASE_URL}/sign_out`, {
+      headers: { Authorization: authToken },
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error(error.message);
   }
-);
+});
 
 const authSlice = createSlice({
   name: "auth",
@@ -104,11 +105,10 @@ const authSlice = createSlice({
       })
       .addCase(registerUser.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload;
+        state.error = action.error.message;
       })
       .addCase(logoutUser.pending, (state) => {
         state.loading = true;
-        state.error = null;
       })
       .addCase(logoutUser.fulfilled, (state, action) => {
         state.isAuthenticated = false;

@@ -27,3 +27,18 @@ body {
   background-color: #91b156;
   border-radius: 10px;
 }
+
+.btn {
+  border: 1px;
+  border-radius: 3px;
+  background-color: #91b156;
+  padding: 4px;
+  width: 40%;
+  color: #fff;
+  transition: 0.5s;
+}
+
+.btn:hover {
+  background-color: #607042;
+  transition: 0.5s;
+}

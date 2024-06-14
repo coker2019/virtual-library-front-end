@@ -1,20 +1,30 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { registerUser } from "../redux/slices/authSlice";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Register = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [userData, setUserData] = useState({
     email: "",
     password: "",
     confirmPassword: "",
+    role: "user",
   });
   const [passwordError, setPasswordError] = useState("");
   const { loading, error } = useSelector((state) => state.auth);
+  const [err, setErr] = useState("");
+  const [isAdmin, setIsAdmin] = useState(false);
 
   const handleChange = (e) => {
-    setUserData({ ...userData, [e.target.name]: e.target.value });
+    const { name, value, type, checked } = e.target;
+    if (type === "checkbox") {
+      setIsAdmin(checked);
+      setUserData({ ...userData, role: checked ? "admin" : "user" });
+    } else {
+      setUserData({ ...userData, [name]: value });
+    }
   };
 
   const handleSubmit = (e) => {
@@ -28,16 +38,34 @@ const Register = () => {
       registerUser({
         email: userData.email,
         password: userData.password,
+        role: userData.role,
       })
-    );
+    ).then((resultAction) => {
+      if (registerUser.fulfilled.match(resultAction)) {
+        navigate("/home");
+        setUserData({
+          email: "",
+          password: "",
+          confirmPassword: "",
+        });
+      }
+    });
   };
 
+  useEffect(() => {
+    if (error !== null) {
+      setErr(error);
+    }
+    const timeout = setTimeout(() => setErr(""), 3000);
+    return () => clearTimeout(timeout);
+  }, [error]);
+
   return (
-    <div className="bg-library-pattern bg-cover bg-center bg-no-repeat flex justify-center items-center  min-h-screen bg-white">
-      <div className=" bg-[#f4f4f990] p-6 w-[80vw] lg:w-[30vw] md:w-[50vw] sm:w-[30vw] shadow-lg animate-fade-left animate-once">
+    <div className="bg-library-pattern bg-cover bg-center bg-no-repeat flex justify-center items-center min-h-screen bg-white">
+      <div className="bg-[#f4f4f990] p-6 w-[80vw] lg:w-[30vw] md:w-[50vw] sm:w-[30vw] shadow-lg animate-fade-left animate-once">
         <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
           <h1 className="text-xl font-bold text-center mb-4">Register</h1>
-          {error && <p className="text-red-500">{error}</p>}
+          {err && <p className="text-red-500 text-sm">{err}</p>}
           {passwordError && <p className="text-red-500">{passwordError}</p>}
 
           <input
@@ -66,14 +94,16 @@ const Register = () => {
             onChange={handleChange}
             className="p-2 border font-normal rounded-full w-full"
           />
-          <div className="flex justify-start">
-            <label htmlFor="admin" className="mr-2 text-primaryGreen font-bold">
-              as Admin ?
+
+          <div className="flex justify-start items-center">
+            <label htmlFor="admin" className="mr-2 text-primaryGreen">
+              Register as an Admin?
             </label>
             <input
               type="checkbox"
               name="admin"
-              id=""
+              checked={isAdmin}
+              onChange={handleChange}
               className="form-checkbox bg-red-500 text-primaryGreen focus:ring-primaryGreen focus:ring-2 rounded"
             />
           </div>
@@ -83,6 +113,7 @@ const Register = () => {
             className="bg-customGreen shadow-md p-2 border font-semibold rounded-full text-white w-full">
             {loading ? "Loading..." : "Register"}
           </button>
+
           <p className="my-5">
             Already have an account?
             <Link to="/login" className="cursor-pointer text-primaryGreen ml-2">

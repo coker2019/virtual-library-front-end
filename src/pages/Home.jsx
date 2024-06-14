@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { useSelector } from "react-redux";
-import Header from "../components/Header";
 import { images } from "../Assets";
+import BookCard from "../components/card";
 
 const Home = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -44,8 +44,7 @@ const Home = () => {
 
   return (
     <div className="container mx-auto px-4">
-      <Header />
-      <div className="min-h-screen">
+      <div className="min-h-screen animate-fade-left">
         <div className="justify-center items-center p-5 mt-16">
           <h1 className="text-3xl text-center font-bold mt-10">
             Welcome to the Library
@@ -55,15 +54,15 @@ const Home = () => {
           </p>
         </div>
 
-        <div className="p-5 mt-10">
+        <div className="p-5">
           <div className="flex flex-col items-center">
-            <div className="bg-slate-50 flex w-full sm:w-3/4 md:w-1/2 lg:w-1/3 mx-auto items-center border border-gray-700 rounded-lg">
+            <div className="bg-slate-50 flex w-full sm:w-3/4 md:w-1/2 lg:w-1/3 items-center border border-gray-700 rounded-lg">
               <input
                 type="text"
                 value={searchQuery}
                 onChange={handleSearchInputChange}
                 placeholder="Search for books..."
-                className="w-full relative text-center p-2 outline-none rounded-lg"
+                className="w-full p-2 outline-none rounded-lg"
               />
               <img
                 src={images.search}
@@ -74,16 +73,13 @@ const Home = () => {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
-            {Array.isArray(filteredBooks) &&
-              filteredBooks.map((book) => (
-                <div
-                  key={book.id}
-                  className="bg-white p-4 shadow-md rounded-md">
-                  <h3 className="text-lg font-bold">{book.title}</h3>
-                  <p className="text-gray-600">{book.author}</p>
-                </div>
-              ))}
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mt-7">
+            <BookCard />
+            <BookCard />
+            <BookCard />
+            <BookCard />
+            <BookCard />
+            <BookCard />
           </div>
         </div>
       </div>

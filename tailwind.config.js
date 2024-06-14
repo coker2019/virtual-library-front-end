@@ -21,7 +21,6 @@ module.exports = {
         primaryMustard: "#C3990F",
         primaryAsh: "#828282",
         white: "#ffffff",
-        red: "#F63434",
         redOuter: "#F63434",
         yellow: "#FFCA28",
         yellowOuter: "#FFCA28",
