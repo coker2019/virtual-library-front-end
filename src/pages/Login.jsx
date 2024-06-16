@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { loginUser, updateLoginStatus } from "../redux/slices/authSlice";
 import { Link, useNavigate } from "react-router-dom";
+import { fetchCategories } from "../redux/slices/categoriesSlice";
+import { fetchBooks } from "../redux/slices/booksSlice";
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -30,6 +32,8 @@ const Login = () => {
               : "failed"
           )
         );
+        dispatch(fetchCategories());
+        dispatch(fetchBooks());
         navigate("/home");
         setCredentials({
           email: "",

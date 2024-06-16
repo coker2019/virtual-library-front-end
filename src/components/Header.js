@@ -1,7 +1,7 @@
 import React from "react";
 import { useState } from "react";
 import { AiOutlineClose, AiOutlineMenu } from "react-icons/ai";
-import { Link, useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { images } from "../Assets";
 import { useDispatch } from "react-redux";
 import { UserCircleIcon } from "@heroicons/react/24/outline";
@@ -37,28 +37,28 @@ const Header = () => {
         <div className="container gap-5 flex justify-between items-center">
           {currentUser.role === "admin" && (
             <>
-              <Link
-                to="#"
+              <NavLink
+                to="/books"
                 className="flex items-center hover:border-b-2 hover:border-customGreen">
                 Manage Books
-              </Link>
-              <Link
-                to="#"
+              </NavLink>
+              <NavLink
+                to="/categories"
                 className="flex items-center hover:border-b-2 hover:border-customGreen">
                 Manage Categories
-              </Link>
+              </NavLink>
             </>
           )}
-          <Link
+          <NavLink
             to="/reserved-books"
             className="flex items-center hover:border-b-2 hover:border-customGreen">
             Reserved Books
-          </Link>
-          <Link
+          </NavLink>
+          <NavLink
             to="/borrowed-books"
             className="flex items-center hover:border-b-2 hover:border-customGreen">
             Borrowed Books
-          </Link>
+          </NavLink>
 
           {currentUser && (
             <div className="flex items-center hover:border-b-2 hover:border-customGreen">
@@ -88,15 +88,15 @@ const Header = () => {
         </div>
         <ul className="p-8 text-2xl w-full">
           <div className="text-lg font-bold container gap-5 flex flex-col justify-between items-center">
-            <Link to="/book-list" className="flex items-center">
+            <NavLink to="/book-list" className="flex items-center">
               List of Books
-            </Link>
-            <Link to="/reserved-books" className="flex items-center">
+            </NavLink>
+            <NavLink to="/reserved-books" className="flex items-center">
               Reserved Books
-            </Link>
-            <Link to="/borrowed-books" className="flex items-center">
+            </NavLink>
+            <NavLink to="/borrowed-books" className="flex items-center">
               Borrowed Books
-            </Link>
+            </NavLink>
           </div>
         </ul>
       </div>

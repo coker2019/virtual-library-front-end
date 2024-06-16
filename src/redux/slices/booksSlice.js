@@ -8,17 +8,14 @@ const initialState = {
   error: null,
 };
 
-export const fetchBooks = createAsyncThunk(
-  "books/fetchBooks",
-  async (_, { rejectWithValue }) => {
-    try {
-      const response = await axiosInstance.get("/books");
-      return response.data;
-    } catch (error) {
-      return rejectWithValue(error.response.data);
-    }
+export const fetchBooks = createAsyncThunk("books/fetchBooks", async () => {
+  try {
+    const response = await axiosInstance.get("books");
+    return response.data;
+  } catch (error) {
+    return error.response.data;
   }
-);
+});
 
 export const fetchBookById = createAsyncThunk(
   "books/fetchBookById",
@@ -46,17 +43,16 @@ export const fetchBookByCategory = createAsyncThunk(
   }
 );
 
-export const uploadBook = createAsyncThunk(
-  "books/uploadBook",
-  async (bookData, { rejectWithValue }) => {
-    try {
-      const response = await axiosInstance.post("/books", bookData);
-      return response.data;
-    } catch (error) {
-      return rejectWithValue(error.response.data);
-    }
+export const uploadBook = createAsyncThunk("books/uploadBook", async (book) => {
+  try {
+    const response = await axiosInstance.post("books", {
+      book,
+    });
+    return response.data;
+  } catch (error) {
+    return error.response.data;
   }
-);
+});
 
 export const updateBook = createAsyncThunk(
   "books/updateBook",
@@ -129,7 +125,6 @@ const booksSlice = createSlice({
       })
       .addCase(uploadBook.pending, (state) => {
         state.loading = true;
-        state.error = null;
       })
       .addCase(uploadBook.fulfilled, (state, action) => {
         state.books.push(action.payload);

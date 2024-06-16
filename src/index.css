@@ -42,3 +42,13 @@ body {
   background-color: #607042;
   transition: 0.5s;
 }
+
+.active {
+  border-bottom: 2px solid #607042;
+  color: #fff;
+}
+
+.btn.disabled {
+  background-color: #91b15695;
+  cursor: not-allowed;
+}

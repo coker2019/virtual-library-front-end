@@ -43,7 +43,7 @@ const Home = () => {
   };
 
   return (
-    <div className="container mx-auto px-4">
+    <div className=" mx-auto px-4">
       <div className="min-h-screen animate-fade-left">
         <div className="justify-center items-center p-5 mt-16">
           <h1 className="text-3xl text-center font-bold mt-10">

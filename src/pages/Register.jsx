@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { registerUser } from "../redux/slices/authSlice";
 import { Link, useNavigate } from "react-router-dom";
+import { fetchCategories } from "../redux/slices/categoriesSlice";
+import { fetchBooks } from "../redux/slices/booksSlice";
 
 const Register = () => {
   const dispatch = useDispatch();
@@ -42,7 +44,10 @@ const Register = () => {
       })
     ).then((resultAction) => {
       if (registerUser.fulfilled.match(resultAction)) {
+        dispatch(fetchCategories());
+        dispatch(fetchBooks());
         navigate("/home");
+
         setUserData({
           email: "",
           password: "",
