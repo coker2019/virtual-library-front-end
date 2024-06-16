@@ -1,31 +1,62 @@
-import React from 'react';
-import { Route, Routes } from 'react-router-dom';
-import Home from './pages/Home';
-import Login from './pages/Login';
-import Register from './pages/Register';
-import PrivateRoute from './components/PrivateRoute';
-import PublicRoute from './components/PublicRoute';
-import BookList from './pages/BookList';
-import Categories from './pages/Categories';
-import BorrowedBooks from './pages/BorrowedBooks';
-import ReservedBooks from './pages/ReservedBooks';
-
+import React, { useEffect } from "react";
+import { Route, Routes, useNavigate } from "react-router-dom";
+import Home from "./pages/Home";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import BookList from "./pages/BookList";
+import Categories from "./pages/Categories";
+import BorrowedBooks from "./pages/BorrowedBooks";
+import ReservedBooks from "./pages/ReservedBooks";
+import Splash from "./pages/Splash";
+import PrivateRoute from "./pages/PrivateRoute";
+import Layout from "./components/layout";
+import { resetUserState } from "./redux/slices/authSlice";
+import { useDispatch } from "react-redux";
+import { jwtDecode } from "jwt-decode"; // Remove the curly braces
 
 const App = () => {
-  return (
-   
-      <Routes>
-        <Route path="/" element={<PublicRoute><Register /></PublicRoute>} />
-        <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
-        <Route path="/home" element={<PrivateRoute><Home /></PrivateRoute>} />
-        <Route path="/categories" element={<PrivateRoute><Categories /></PrivateRoute>} />
-        <Route path="/book-list" element={<PrivateRoute><BookList /></PrivateRoute>} />
-        <Route path="/borrowed-books" element={<PrivateRoute><BorrowedBooks /></PrivateRoute>} />
-        <Route path="/reserved-books" element={<PrivateRoute><ReservedBooks /></PrivateRoute>} />
-        
+  const token = localStorage.getItem("token");
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-      </Routes>
-   
+  useEffect(() => {
+    if (token) {
+      try {
+        const decodedToken = jwtDecode(token);
+        const isExpired = decodedToken.exp * 1000 < Date.now();
+
+        if (isExpired) {
+          localStorage.removeItem("token");
+          localStorage.removeItem("currentUser");
+          dispatch(resetUserState());
+          navigate("/login");
+        }
+      } catch (error) {
+        console.error("Invalid token", error);
+        localStorage.removeItem("token");
+        localStorage.removeItem("currentUser");
+        dispatch(resetUserState());
+        navigate("/login");
+      }
+    }
+  }, [dispatch, navigate, token]);
+
+  return (
+    <Routes>
+      <Route path="/" element={<Splash />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
+
+      <Route element={<PrivateRoute />}>
+        <Route element={<Layout />}>
+          <Route path="/home" element={<Home />}></Route>
+          <Route path="/categories" element={<Categories />} />
+          <Route path="/books" element={<BookList />} />
+          <Route path="/borrowed-books" element={<BorrowedBooks />} />
+          <Route path="/reserved-books" element={<ReservedBooks />} />
+        </Route>
+      </Route>
+    </Routes>
   );
 };
 

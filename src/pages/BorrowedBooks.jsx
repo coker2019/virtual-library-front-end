@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { fetchBorrowedBooks } from '../redux/slices/borrowedBooksSlice';
-import Header from '../components/Header';
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchBorrowedBooks } from "../redux/slices/borrowedBooksSlice";
+import Header from "../components/Header";
 
 const BorrowedBooks = () => {
   const dispatch = useDispatch();
@@ -14,7 +14,7 @@ const BorrowedBooks = () => {
   return (
     <div className="container mx-auto">
       <Header />
-      <div className="min-h-screen bg-orange-200">
+      <div className="min-h-screen">
         <h1 className="text-3xl text-center font-bold mt-10">Borrowed Books</h1>
         {loading && <p>Loading...</p>}
         {error && <p className="text-red-500">{error}</p>}

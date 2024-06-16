@@ -1,16 +1,37 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { reservedBooksAPI } from '../../axiosConfig';
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+// import { reservedBooksAPI } from "../../axiosConfig";
+import axiosInstance from "../../utils/axios";
 
 export const fetchReservedBooks = createAsyncThunk(
-  'reservedBooks/fetchReservedBooks',
+  "reservations/fetchReservedBooks",
   async () => {
-    const response = await reservedBooksAPI.fetchReservedBooks();
+    const response = await axiosInstance.get("reservations");
+    return response.data;
+  }
+);
+
+export const reserveBook = createAsyncThunk(
+  "reservations/reserveBook",
+  async (bookId) => {
+    const response = await axiosInstance.post("reservations", {
+      book_id: bookId,
+    });
+    return response.data;
+  }
+);
+
+export const cancelReservation = createAsyncThunk(
+  "reservations/cancelReservation",
+  async (reservationId) => {
+    const response = await axiosInstance.delete(
+      `reservations/${reservationId}`
+    );
     return response.data;
   }
 );
 
 const reservedBooksSlice = createSlice({
-  name: 'reservedBooks',
+  name: "reservedBooks",
   initialState: {
     books: [],
     loading: false,
@@ -27,6 +48,30 @@ const reservedBooksSlice = createSlice({
         state.books = action.payload;
       })
       .addCase(fetchReservedBooks.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      })
+      .addCase(reserveBook.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(reserveBook.fulfilled, (state, action) => {
+        state.loading = false;
+        state.books.push(action.payload);
+      })
+      .addCase(reserveBook.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      })
+      .addCase(cancelReservation.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(cancelReservation.fulfilled, (state, action) => {
+        state.loading = false;
+        state.books = state.books.filter(
+          (book) => book.id !== action.payload.id
+        );
+      })
+      .addCase(cancelReservation.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
       });
