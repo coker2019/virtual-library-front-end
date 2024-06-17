@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Wrapper from "../components/wrapper";
-import Table from "../components/table";
 import {
   BookOpenIcon,
   PencilSquareIcon,
@@ -9,53 +8,26 @@ import {
 } from "@heroicons/react/24/outline";
 import Modal from "../components/modal";
 import PostBook from "./post-book";
-import { fetchBooks } from "../redux/slices/booksSlice";
+import { deleteBook, fetchBooks, updateBook } from "../redux/slices/booksSlice";
+import Input from "../components/input";
 
 const BookList = () => {
   const dispatch = useDispatch();
   const { books, loading, error } = useSelector((state) => state.books);
+  const [editRow, setEditRow] = useState(null);
+  const [editRecommended, setEditRecommended] = useState(null);
+  const [editName, setEditName] = useState("");
 
   useEffect(() => {
     dispatch(fetchBooks());
   }, [dispatch]);
 
-  // if (loading) return <p>Loading...</p>;
-  // if (error) return <p>{error}</p>;
-
-  let tableHeads = [
-    {
-      name: "S/N",
-    },
-    {
-      name: "Book Detail",
-    },
-    {
-      name: "Category",
-    },
-    {
-      name: "Recommended",
-    },
-    {
-      name: "Action",
-    },
-  ];
-  let tableBodies = [
-    {
-      name: "1",
-    },
-    {
-      name: "Lords guides",
-      img: "///",
-    },
-    {
-      name: "Inspiration",
-    },
-    {
-      name: "Yes",
-    },
-    {
-      name: "Delete Book",
-    },
+  const tableHeads = [
+    { name: "S/N" },
+    { name: "Book Detail" },
+    { name: "Category" },
+    { name: "Recommended" },
+    { name: "Action" },
   ];
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -66,6 +38,42 @@ const BookList = () => {
 
   const closeModal = () => {
     setIsModalOpen(false);
+  };
+
+  const handleDeleteBook = (id) => {
+    dispatch(deleteBook(id)).then((res) => {
+      if (deleteBook.fulfilled.match(res)) {
+        dispatch(fetchBooks());
+      }
+    });
+  };
+
+  const handleEditBook = (id, recommended, name) => {
+    setEditRow(id);
+    setEditRecommended(recommended);
+    setEditName(name);
+  };
+
+  const handleRecommendedChange = (e) => {
+    setEditRecommended(e.target.value === "true");
+  };
+
+  const handleEditName = (e) => {
+    setEditName(e.target.value);
+  };
+
+  const saveEditBook = (id) => {
+    const updatedBook = { id, recommended: editRecommended, title: editName };
+    dispatch(updateBook(updatedBook)).then((res) => {
+      if (updateBook.fulfilled.match(res)) {
+        dispatch(fetchBooks());
+        setEditRow(null);
+      }
+    });
+  };
+
+  const cancelEditBook = () => {
+    setEditRow(null);
   };
 
   return (
@@ -87,7 +95,7 @@ const BookList = () => {
             <button
               type="button"
               onClick={openModal}
-              className=" p-3 bg-primaryGreen rounded-md text-white font-semibold shadow-lg hover:bg-customGreen hover:shadow-xl transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-customGreen cursor-pointer"
+              className="p-3 bg-primaryGreen rounded-md text-white font-semibold shadow-lg hover:bg-customGreen hover:shadow-xl transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-customGreen cursor-pointer"
               data-hs-overlay={"bookmodal"}
               data-modal-backdrop="static">
               <div className="flex items-center">
@@ -102,9 +110,9 @@ const BookList = () => {
                 <table className="min-w-full leading-normal">
                   <thead>
                     <tr>
-                      {tableHeads.map((column) => (
+                      {tableHeads.map((column, index) => (
                         <th
-                          key={column.index}
+                          key={index}
                           className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                           {column.name}
                         </th>
@@ -121,8 +129,14 @@ const BookList = () => {
                           </td>
                           <td className="px-5 py-4 border-b border-gray-200 bg-white">
                             <div className="flex justify-between">
-                              <span className="text-sm">{row.title}</span>
-
+                              {editRow === row.id ? (
+                                <Input
+                                  value={editName}
+                                  onChange={handleEditName}
+                                />
+                              ) : (
+                                <span className="text-sm">{row.title}</span>
+                              )}
                               <img
                                 src={row.image?.image_data}
                                 className="w-10 h-10"
@@ -134,17 +148,49 @@ const BookList = () => {
                             {row.category?.name}
                           </td>
                           <td className="px-5 py-4 border-b border-gray-200 bg-white">
-                            {row.recommended}
+                            {editRow === row.id ? (
+                              <select
+                                value={editRecommended}
+                                onChange={handleRecommendedChange}
+                                className="form-select">
+                                <option value="true">True</option>
+                                <option value="false">False</option>
+                              </select>
+                            ) : row.recommended ? (
+                              "True"
+                            ) : (
+                              "False"
+                            )}
                           </td>
                           <td className="px-5 py-4 border-b border-gray-200 bg-white">
                             <div className="flex justify-between">
-                              <button>
-                                <PencilSquareIcon className="w-6 h-6 text-primaryGreen" />
-                              </button>
-                              <button>
-                                {" "}
-                                <TrashIcon className="w-6 h-6 text-red-500" />
-                              </button>
+                              {editRow === row.id ? (
+                                <>
+                                  <button onClick={() => saveEditBook(row.id)}>
+                                    Save
+                                  </button>
+                                  <button onClick={cancelEditBook}>
+                                    Cancel
+                                  </button>
+                                </>
+                              ) : (
+                                <>
+                                  <button
+                                    onClick={() =>
+                                      handleEditBook(
+                                        row.id,
+                                        row.recommended,
+                                        row.title
+                                      )
+                                    }>
+                                    <PencilSquareIcon className="w-6 h-6 text-primaryGreen" />
+                                  </button>
+                                  <button
+                                    onClick={() => handleDeleteBook(row.id)}>
+                                    <TrashIcon className="w-6 h-6 text-red-500" />
+                                  </button>
+                                </>
+                              )}
                             </div>
                           </td>
                         </tr>

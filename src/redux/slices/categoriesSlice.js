@@ -21,39 +21,41 @@ export const fetchCategories = createAsyncThunk(
 
 export const addNewCategory = createAsyncThunk(
   "categories/addNewCategory",
-  async ({ rejectWithValue }) => {
+  async (category) => {
     try {
-      const response = await axiosInstance.post("categories");
+      const response = await axiosInstance.post("categories", {
+        name: category,
+      });
       return response.data;
     } catch (err) {
-      return rejectWithValue(err.response.data);
+      return err.response.data;
     }
   }
 );
 
 export const removeCategory = createAsyncThunk(
   "categories/removeCategory",
-  async ({ category_id, rejectWithValue }) => {
+  async (id) => {
     try {
-      let response = await axiosInstance.delete(`categories/${category_id}`);
+      let response = await axiosInstance.delete(`categories/${id}`);
       return response.data;
     } catch (err) {
-      return rejectWithValue(err.response.data);
+      return err.response.data;
     }
   }
 );
 
 export const updateCategory = createAsyncThunk(
   "categories/updateCategory",
-  async ({ updateCategoryData, rejectWithValue }) => {
+  async (updateCategoryData) => {
     try {
-      let response = await axiosInstance.patch(
-        "categories",
+      let response = await axiosInstance.put(
+        `categories/${updateCategoryData.id}`,
         updateCategoryData
       );
       return response.data;
     } catch (err) {
-      return rejectWithValue(err.payload.data);
+      return err.payload.data;
     }
   }
 );

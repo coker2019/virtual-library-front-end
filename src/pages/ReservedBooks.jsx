@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchReservedBooks } from "../redux/slices/reservedBooksSlice";
 import Header from "../components/Header";
+import Wrapper from "../components/wrapper";
 
 const ReservedBooks = () => {
   const dispatch = useDispatch();
@@ -12,9 +13,8 @@ const ReservedBooks = () => {
   }, [dispatch]);
 
   return (
-    <div className="container mx-auto">
-      <Header />
-      <div className="min-h-screen">
+    <Wrapper>
+      <div className="">
         <h1 className="text-3xl text-center font-bold mt-10">Reserved Books</h1>
         {loading && <p>Loading...</p>}
         {error && <p className="text-red-500">{error}</p>}
@@ -27,7 +27,7 @@ const ReservedBooks = () => {
           ))}
         </div>
       </div>
-    </div>
+    </Wrapper>
   );
 };
 

@@ -1,16 +1,16 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { images } from "../Assets";
 import BookCard from "../components/card";
+import { fetchBooks } from "../redux/slices/booksSlice";
 
 const Home = () => {
   const [searchQuery, setSearchQuery] = useState("");
+  let dispatch = useDispatch();
 
   // Memoize the books from the Redux store
-  const books = useSelector((state) => state.books || []);
+  const { books, loading, error } = useSelector((state) => state.books);
   const memoizedBooks = useMemo(() => books, [books]);
-
-  console.log("memoizedBooks:", memoizedBooks); // Debugging line
 
   // Memoize the searchBooks function
   const searchBooks = useCallback(
@@ -34,6 +34,9 @@ const Home = () => {
     setFilteredBooks(searchBooks(searchQuery));
   }, [searchQuery, searchBooks]);
 
+  useEffect(() => {
+    dispatch(fetchBooks());
+  }, [dispatch]);
   const handleSearchInputChange = (e) => {
     setSearchQuery(e.target.value);
   };
@@ -74,12 +77,19 @@ const Home = () => {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mt-7">
-            <BookCard />
-            <BookCard />
-            <BookCard />
-            <BookCard />
-            <BookCard />
-            <BookCard />
+            {books &&
+              books.length > 0 &&
+              books.map((book) => (
+                <BookCard
+                  key={book.id}
+                  book_album={book.image.image_data}
+                  book_author={book.author}
+                  book_desc={book.description}
+                  recommended={book.recommended}
+                  book_name={book.title}
+                  book_id={book.id}
+                />
+              ))}
           </div>
         </div>
       </div>
