@@ -4,6 +4,7 @@ import axiosInstance from "../../utils/axios";
 const initialState = {
   categories: [],
   isLoading: false,
+  cat_id: null,
   error: false,
 };
 
@@ -63,7 +64,11 @@ export const updateCategory = createAsyncThunk(
 const categorySlice = createSlice({
   name: "category",
   initialState,
-  reducers: {},
+  reducers: {
+    setCategoryId: (state, action) => {
+      state.cat_id = action.payload;
+    },
+  },
 
   extraReducers: (builder) => {
     builder
@@ -73,6 +78,7 @@ const categorySlice = createSlice({
       .addCase(fetchCategories.fulfilled, (state, action) => {
         state.isLoading = false;
         state.categories = action.payload;
+        state.cat_id = null;
       })
       .addCase(fetchCategories.rejected, (state, action) => {
         state.isLoading = false;
@@ -126,5 +132,7 @@ const categorySlice = createSlice({
       });
   },
 });
+
+export const { setCategoryId } = categorySlice.actions;
 
 export default categorySlice.reducer;

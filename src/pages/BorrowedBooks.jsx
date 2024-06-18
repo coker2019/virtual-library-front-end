@@ -1,8 +1,12 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchBorrowedBooks } from "../redux/slices/borrowedBooksSlice";
+import {
+  fetchBorrowedBooks,
+  returnBook,
+} from "../redux/slices/borrowedBooksSlice";
 import Header from "../components/Header";
 import Wrapper from "../components/wrapper";
+import BookCard from "../components/card";
 
 const BorrowedBooks = () => {
   const dispatch = useDispatch();
@@ -12,18 +16,40 @@ const BorrowedBooks = () => {
     dispatch(fetchBorrowedBooks());
   }, [dispatch]);
 
+  const handleReturnBoook = (id) => {
+    try {
+      dispatch(returnBook(id)).then((res) => {
+        if (returnBook.fulfilled.match(res)) {
+          dispatch(fetchBorrowedBooks());
+        }
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <Wrapper>
       <div className="">
-        <h1 className="text-3xl text-center font-bold mt-10">Borrowed Books</h1>
+        <h1 className="text-2xl font-bold text-primaryGreen">Borrowed Books</h1>
         {loading && <p>Loading...</p>}
-        {error && <p className="text-red-500">{error}</p>}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mt-4">
           {books.map((book) => (
-            <div key={book.id} className="bg-white p-4 shadow-md rounded-md">
-              <h3 className="text-lg font-bold">{book.title}</h3>
-              <p className="text-gray-600">{book.author}</p>
-            </div>
+            <BookCard
+              key={book.id}
+              book_album={book?.book.image.image_data}
+              book_author={book?.book.author}
+              book_name={book?.book.title}
+              book_desc={book?.book.description}
+              book_id={book?.book.id}
+              needed_else_where
+              btn_text={"Return"}
+              any_btn={() => handleReturnBoook(book.id)}
+              reserved
+              action={"Borrowed"}
+              date={book.due_date}
+              link={book?.book.file_url}
+            />
           ))}
         </div>
       </div>

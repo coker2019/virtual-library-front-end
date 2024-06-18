@@ -7,6 +7,7 @@ const initialState = {
   isAuthenticated: null,
   user: [],
   loading: false,
+  selected_category: false,
   error: null,
   registrationStatus: null,
   loginStatus: null,
@@ -78,6 +79,9 @@ const authSlice = createSlice({
       state.isAuthenticated = false;
       state.user = [];
     },
+    selectedCategory: (state, action) => {
+      state.selected_category = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -88,6 +92,7 @@ const authSlice = createSlice({
       .addCase(loginUser.fulfilled, (state, action) => {
         state.isAuthenticated = true;
         state.user = action.payload.status.data;
+        state.selected_category = false;
         state.loading = false;
       })
       .addCase(loginUser.rejected, (state, action) => {
@@ -102,6 +107,7 @@ const authSlice = createSlice({
         state.isAuthenticated = true;
         state.user = action.payload.status.data;
         state.loading = false;
+        state.selected_category = false;
       })
       .addCase(registerUser.rejected, (state, action) => {
         state.loading = false;
@@ -122,6 +128,10 @@ const authSlice = createSlice({
   },
 });
 
-export const { updateRegistrationStatus, updateLoginStatus, resetUserState } =
-  authSlice.actions;
+export const {
+  updateRegistrationStatus,
+  updateLoginStatus,
+  resetUserState,
+  selectedCategory,
+} = authSlice.actions;
 export default authSlice.reducer;

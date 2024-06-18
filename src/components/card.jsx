@@ -1,4 +1,13 @@
 import React from "react";
+import {
+  borrowBook,
+  fetchBorrowedBooks,
+} from "../redux/slices/borrowedBooksSlice";
+import {
+  fetchReservedBooks,
+  reserveBook,
+} from "../redux/slices/reservedBooksSlice";
+import { useDispatch } from "react-redux";
 
 const BookCard = ({
   book_album,
@@ -7,14 +16,48 @@ const BookCard = ({
   recommended,
   book_id,
   book_author,
+  needed_else_where,
+  reserved,
+  any_btn,
+  btn_text,
+  action,
+  date,
+  link,
 }) => {
+  let dispatch = useDispatch();
+
+  const handleBorrow = (id) => {
+    try {
+      dispatch(borrowBook(id)).then((res) => {
+        if (borrowBook.fulfilled.match(res)) {
+          dispatch(fetchBorrowedBooks());
+        }
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const handleReserve = (id) => {
+    try {
+      dispatch(reserveBook(id)).then((res) => {
+        if (reserveBook.fulfilled.match(res)) {
+          dispatch(fetchReservedBooks());
+        }
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
   return (
     <div className="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-[#BCCF99] dark:border-gray-700 cursor-pointer relative">
-      <img
-        className="rounded-t-lg h-[200px] w-full"
-        src={book_album && book_album}
-        alt={`${book_name && book_name} album`}
-      />
+      <a href={link && link} target="_blank">
+        <img
+          className="rounded-t-lg h-[200px] w-full"
+          src={book_album && book_album}
+          alt={`${book_name && book_name} album`}
+        />
+      </a>
       <div className="p-3">
         <h5 className=" text-lg font-bold tracking-tight text-gray-900 white:text-dark">
           {book_name && book_name}
@@ -26,15 +69,34 @@ const BookCard = ({
       </div>
 
       <div className="flex justify-between p-3">
-        <button className="btn">Reserve</button>
-        <button className="btn">Borrow</button>
+        {needed_else_where ? (
+          <button className="btn" onClick={any_btn}>
+            {btn_text}
+          </button>
+        ) : (
+          <>
+            <button className="btn" onClick={() => handleReserve(book_id)}>
+              Reserve
+            </button>
+            <button className="btn" onClick={() => handleBorrow(book_id)}>
+              Borrow
+            </button>
+          </>
+        )}
       </div>
-      {recommended && recommended && (
+      {recommended && (
         <div className="absolute top-0 right-3">
           <span className="bg-blue text-[10px] text-white p-1  rounded-sm">
             Recommended
           </span>
         </div>
+      )}
+
+      {reserved && (
+        <p className="absolute top-0 right-3 text-[12px]">
+          {action} till{" "}
+          <span className="text-primaryGreen font-bold">{date}</span>
+        </p>
       )}
     </div>
   );
