@@ -9,6 +9,7 @@ import {
 } from "../redux/slices/booksSlice";
 import Wrapper from "../components/wrapper";
 import SelectCategory from "./select-categories";
+import Loader from "../components/loader";
 
 const Home = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -18,7 +19,7 @@ const Home = () => {
   let selectCategory = useSelector((state) => state.auth.selected_category);
 
   // Memoize the books from the Redux store
-  const { books } = useSelector((state) => state.books);
+  const { books, loading } = useSelector((state) => state.books);
   // const memoizedBooks = useMemo(() => books, [books]);
   const searchHistoryRef = useRef(null);
   let userData = JSON.parse(localStorage.getItem("currentUser"));
@@ -134,22 +135,28 @@ const Home = () => {
           </div>
         </div>
         <div className="p-5">
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mt-7">
-            {Array.isArray(books) &&
-              books.length > 0 &&
-              books.map((book) => (
-                <BookCard
-                  key={book.id}
-                  book_album={book.image?.image_data} // Safe navigation to handle potential undefined
-                  book_author={book.author}
-                  book_desc={book.description}
-                  recommended={book.recommended}
-                  book_name={book.title}
-                  book_id={book.id}
-                  link={book.file_url}
-                />
-              ))}
-          </div>
+          {loading ? (
+            <div className="flex justify-center items-center py-10">
+              <Loader className="w-20 h-20 text-primaryGreen" />
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mt-7">
+              {Array.isArray(books) &&
+                books.length > 0 &&
+                books.map((book) => (
+                  <BookCard
+                    key={book.id}
+                    book_album={book.image?.image_data} // Safe navigation to handle potential undefined
+                    book_author={book.author}
+                    book_desc={book.description}
+                    recommended={book.recommended}
+                    book_name={book.title}
+                    book_id={book.id}
+                    link={book.file_url}
+                  />
+                ))}
+            </div>
+          )}
         </div>
       </Wrapper>
     </>

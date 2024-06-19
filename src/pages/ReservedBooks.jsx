@@ -6,6 +6,7 @@ import {
 } from "../redux/slices/reservedBooksSlice";
 import Wrapper from "../components/wrapper";
 import BookCard from "../components/card";
+import Loader from "../components/loader";
 
 const ReservedBooks = () => {
   const dispatch = useDispatch();
@@ -27,27 +28,31 @@ const ReservedBooks = () => {
     <Wrapper>
       <div className="">
         <h1 className="text-2xl font-bold text-primaryGreen">Reserved Books</h1>
-        {loading && <p>Loading...</p>}
-        {error && <p className="text-red-500">{error}</p>}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mt-4">
-          {books.map((book) => (
-            <BookCard
-              key={book.id}
-              book_album={book?.book.image.image_data}
-              book_author={book?.book.author}
-              book_name={book?.book.title}
-              book_desc={book?.book.description}
-              book_id={book?.book.id}
-              needed_else_where
-              btn_text={"Return"}
-              any_btn={() => handleReturnReserve(book.id)}
-              reserved
-              action={"Reserved"}
-              date={book.reserved_until}
-              link={book.book.file_url}
-            />
-          ))}
-        </div>
+        {loading ? (
+          <div className="flex items-center justify-center">
+            <Loader className="w-20 h-20" />
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mt-4">
+            {books.map((book) => (
+              <BookCard
+                key={book.id}
+                book_album={book?.book.image.image_data}
+                book_author={book?.book.author}
+                book_name={book?.book.title}
+                book_desc={book?.book.description}
+                book_id={book?.book.id}
+                needed_else_where
+                btn_text={"Return"}
+                any_btn={() => handleReturnReserve(book.id)}
+                reserved
+                action={"Reserved"}
+                date={book.reserved_until}
+                link={book.book.file_url}
+              />
+            ))}
+          </div>
+        )}
       </div>
     </Wrapper>
   );
