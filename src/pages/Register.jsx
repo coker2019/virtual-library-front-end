@@ -131,7 +131,7 @@ const Register = () => {
                 setUserData({ ...userData, preference: e.target.value })
               }
               className="py-3 px-2 bg-white border rounded-sm shadow-sm opacity-50 text-mute">
-              <option>Select Category</option>
+              <option>Select your Preference</option>
               {categories &&
                 categories.length > 0 &&
                 categories.map((itm) => (
