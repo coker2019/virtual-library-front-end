@@ -1,7 +1,6 @@
 import axios from "axios";
 
 const BASE_URL = process.env.REACT_APP_API_BASE_URL;
-console.log("base url", BASE_URL);
 
 const setBaseUrl = (endpoint) => BASE_URL + endpoint;
 

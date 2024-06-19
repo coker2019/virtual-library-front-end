@@ -53,12 +53,18 @@ const Home = () => {
   }, []);
 
   useEffect(() => {
-    if (searchQuery === "") {
-      if (currentUser.role === "user") {
-        dispatch(fetchBookByCategory(gen_category_id));
-      } else {
-        dispatch(fetchBooks());
-      }
+    if (currentUser.preference !== null) {
+      dispatch(fetchBookByCategory(currentUser.preference));
+    } else {
+      dispatch(fetchBooks());
+    }
+  }, []);
+
+  useEffect(() => {
+    if (searchQuery !== "") {
+      dispatch(fetchBooks());
+    } else {
+      dispatch(fetchBookByCategory(currentUser.preference));
     }
   }, [searchQuery]);
 
@@ -91,9 +97,6 @@ const Home = () => {
 
   return (
     <>
-      {userData && userData?.role === "user" && !selectCategory && (
-        <SelectCategory isOpen={open} setIsOpen={setOpen} />
-      )}
       <Wrapper>
         <div className="flex flex-col justify-center items-center gap-4">
           <h1 className="text-3xl  font-bold">Welcome to the Library</h1>
@@ -140,7 +143,7 @@ const Home = () => {
               <Loader className="w-20 h-20 text-primaryGreen" />
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mt-7">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mt-7 animate-fade-left animate-once animate-delay-[10ms]">
               {Array.isArray(books) &&
                 books.length > 0 &&
                 books.map((book) => (
