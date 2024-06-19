@@ -94,7 +94,7 @@ const Home = () => {
         <SelectCategory isOpen={open} setIsOpen={setOpen} />
       )}
       <Wrapper>
-        <div className="flex flex-col justify-center items-center p-5 mt-6 gap-4">
+        <div className="flex flex-col justify-center items-center gap-4">
           <h1 className="text-3xl  font-bold">Welcome to the Library</h1>
           <p className="text-lg">Explore our collection of books.</p>
 

@@ -18,7 +18,7 @@ const Modal = ({
       className={`${
         isOpen ? "block " : "hidden"
       } fixed inset-0 z-50  overflow-hidden bg-gray-800 bg-opacity-50 flex backdrop-blur-lg items-center justify-center `}>
-      <div className="bg-white rounded-xl shadow-lg w-full max-w-lg mx-auto p-6 transition-all transform ${isOpen ? 'scale-100 opacity-100' : 'scale-95 opacity-0'} animate-fade-left">
+      <div className="bg-white rounded-xl shadow-lg w-full max-w-lg mx-auto p-3 transition-all transform ${isOpen ? 'scale-100 opacity-100' : 'scale-95 opacity-0'} animate-fade-left">
         <div className="flex justify-between items-center pb-3">
           <h3 className="text-lg font-semibold text-gray-800">{title}</h3>
           {btn_text && (

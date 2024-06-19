@@ -27,9 +27,18 @@ const PostBook = ({ id, isOpen, onClose, setIsOpen }) => {
     category_id: "",
     recommended: null,
   };
+  const [error, setError] = useState("");
   const [formData, setFormData] = useState(defaultFormData);
 
-  const [error, setError] = useState("");
+  useEffect(() => {
+    if (error) {
+      const errorTimer = setTimeout(() => {
+        setError("");
+      }, 3000);
+
+      return () => clearTimeout(errorTimer);
+    }
+  }, [error]);
 
   const handleChange = (e) => {
     const { value, name } = e.target;
@@ -68,7 +77,6 @@ const PostBook = ({ id, isOpen, onClose, setIsOpen }) => {
 
   const handleAddNewBook = () => {
     const isFormValid = Object.values(formData).every((value) => value !== "");
-
     if (isFormValid) {
       dispatch(uploadBook(formData)).then((res) => {
         if (uploadBook.fulfilled.match(res)) {
@@ -137,6 +145,7 @@ const PostBook = ({ id, isOpen, onClose, setIsOpen }) => {
           rows="3"
         />
         <Input
+          label="Upload Cover"
           type="file"
           accept=".jpg, .jpeg"
           onChange={handleImageChange}
