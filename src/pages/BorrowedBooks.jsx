@@ -37,7 +37,7 @@ const BorrowedBooks = () => {
           {books.map((book) => (
             <BookCard
               key={book.id}
-              book_album={book?.book.image.image_data}
+              book_album={book?.book?.image?.image_data}
               book_author={book?.book.author}
               book_name={book?.book.title}
               book_desc={book?.book.description}

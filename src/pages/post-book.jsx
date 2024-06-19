@@ -67,13 +67,19 @@ const PostBook = ({ id, isOpen, onClose, setIsOpen }) => {
   };
 
   const handleAddNewBook = () => {
-    dispatch(uploadBook(formData)).then((res) => {
-      if (uploadBook.fulfilled.match(res)) {
-        dispatch(fetchBooks());
-        setIsOpen(false);
-        setFormData(defaultFormData);
-      }
-    });
+    const isFormValid = Object.values(formData).every((value) => value !== "");
+
+    if (isFormValid) {
+      dispatch(uploadBook(formData)).then((res) => {
+        if (uploadBook.fulfilled.match(res)) {
+          dispatch(fetchBooks());
+          setIsOpen(false);
+          setFormData(defaultFormData);
+        }
+      });
+    } else {
+      setError("All fields are required.");
+    }
   };
 
   return (
