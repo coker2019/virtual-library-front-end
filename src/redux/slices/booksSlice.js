@@ -73,7 +73,7 @@ export const updateBook = createAsyncThunk(
   async (bookData, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.put(
-        `/books/${bookData.id}`,
+        `books/${bookData.id}`,
         bookData
       );
       return response.data;

@@ -4,7 +4,6 @@ import {
   cancelReservation,
   fetchReservedBooks,
 } from "../redux/slices/reservedBooksSlice";
-import Header from "../components/Header";
 import Wrapper from "../components/wrapper";
 import BookCard from "../components/card";
 

@@ -7,7 +7,7 @@ import { fetchBooks, uploadBook } from "../redux/slices/booksSlice";
 
 const PostBook = ({ id, isOpen, onClose, setIsOpen }) => {
   const dispatch = useDispatch();
-  const { categories, isLoading } = useSelector((state) => state.categories);
+  const { categories } = useSelector((state) => state.categories);
   const bookloading = useSelector((state) => state.books.loading);
 
   useEffect(() => {

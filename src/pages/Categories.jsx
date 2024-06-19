@@ -126,7 +126,7 @@ const Categories = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {categories &&
+                    {Array.isArray(categories) &&
                       categories.length > 0 &&
                       categories.map((row, index) => (
                         <tr key={row.id} className="hover:bg-gray-100">

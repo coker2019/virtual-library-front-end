@@ -1,10 +1,4 @@
-import React, {
-  useState,
-  useEffect,
-  useCallback,
-  useMemo,
-  useRef,
-} from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { images } from "../Assets";
 import BookCard from "../components/card";
@@ -14,7 +8,6 @@ import {
   fetchBooks,
 } from "../redux/slices/booksSlice";
 import Wrapper from "../components/wrapper";
-import Modal from "../components/modal";
 import SelectCategory from "./select-categories";
 
 const Home = () => {
@@ -25,7 +18,7 @@ const Home = () => {
   let selectCategory = useSelector((state) => state.auth.selected_category);
 
   // Memoize the books from the Redux store
-  const { books, loading, error } = useSelector((state) => state.books);
+  const { books } = useSelector((state) => state.books);
   // const memoizedBooks = useMemo(() => books, [books]);
   const searchHistoryRef = useRef(null);
   let userData = JSON.parse(localStorage.getItem("currentUser"));
@@ -40,7 +33,7 @@ const Home = () => {
       setShowSearchHistory(false);
     }
   };
-
+  // console.log("books", books);
   // console.log("data", searchData);
   useEffect(() => {
     if (searchQuery === "") {
@@ -97,7 +90,7 @@ const Home = () => {
 
   return (
     <>
-      {userData.role === "user" && !selectCategory && (
+      {userData && userData?.role === "user" && !selectCategory && (
         <SelectCategory isOpen={open} setIsOpen={setOpen} />
       )}
       <Wrapper>
@@ -142,12 +135,12 @@ const Home = () => {
         </div>
         <div className="p-5">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mt-7">
-            {books &&
+            {Array.isArray(books) &&
               books.length > 0 &&
               books.map((book) => (
                 <BookCard
                   key={book.id}
-                  book_album={book.image.image_data}
+                  book_album={book.image?.image_data} // Safe navigation to handle potential undefined
                   book_author={book.author}
                   book_desc={book.description}
                   recommended={book.recommended}
