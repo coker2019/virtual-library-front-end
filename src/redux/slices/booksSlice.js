@@ -182,11 +182,11 @@ const booksSlice = createSlice({
       })
       .addCase(fetchBookByCategory.fulfilled, (state, action) => {
         state.loading = false;
-        state.books = action.payload.message;
+        state.books = action.payload;
       })
       .addCase(fetchBookByCategory.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload.message;
+        state.error = action.error.message;
       });
   },
 });

@@ -50,22 +50,16 @@ const Home = () => {
   }, []);
 
   useEffect(() => {
-    if (currentUser.role !== "admin") {
-      dispatch(fetchBookByCategory(currentUser.preference));
-    } else {
+    if (currentUser.preference !== null && searchQuery === "") {
+      try {
+        dispatch(fetchBookByCategory(currentUser.preference));
+      } catch (err) {
+        console.log(err);
+      }
+    } else if (searchQuery.length > 4) {
       dispatch(fetchBooks());
     }
-  }, []);
-
-  useEffect(() => {
-    if (searchQuery === "") {
-      if (currentUser.role === "user") {
-        dispatch(fetchBookByCategory(currentUser.preference));
-      } else {
-        dispatch(fetchBooks());
-      }
-    }
-  }, [searchQuery]);
+  }, [searchQuery, dispatch]);
 
   const handleSearchInputChange = (e) => {
     setSearchQuery(e.target.value);
@@ -106,7 +100,7 @@ const Home = () => {
               type="text"
               value={searchQuery}
               onChange={handleSearchInputChange}
-              placeholder="Search for books..."
+              placeholder="Search for more books..."
               className="w-full outline-none rounded-lg bg-transparent text-primaryGreen"
             />
             <img

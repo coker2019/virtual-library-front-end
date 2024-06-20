@@ -57,6 +57,7 @@ const Register = () => {
           email: "",
           password: "",
           confirmPassword: "",
+          preference: "",
         });
       }
     });
