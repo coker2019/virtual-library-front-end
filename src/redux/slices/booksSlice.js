@@ -175,18 +175,18 @@ const booksSlice = createSlice({
       })
       .addCase(deleteBook.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload.error;
+        state.error = action.payload.message;
       })
       .addCase(fetchBookByCategory.pending, (state) => {
         state.loading = true;
       })
       .addCase(fetchBookByCategory.fulfilled, (state, action) => {
         state.loading = false;
-        state.books = action.payload;
+        state.books = action.payload.message;
       })
       .addCase(fetchBookByCategory.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload.error;
+        state.error = action.payload.message;
       });
   },
 });

@@ -16,14 +16,11 @@ const Home = () => {
   let dispatch = useDispatch();
   const [showSearchHistroy, setShowSearchHistory] = useState(false);
   const [searchData, setSearchData] = useState([]);
-  let selectCategory = useSelector((state) => state.auth.selected_category);
 
   // Memoize the books from the Redux store
   const { books, loading } = useSelector((state) => state.books);
   // const memoizedBooks = useMemo(() => books, [books]);
   const searchHistoryRef = useRef(null);
-  let userData = JSON.parse(localStorage.getItem("currentUser"));
-  let gen_category_id = useSelector((state) => state.categories.cat_id);
   let currentUser = JSON.parse(localStorage.getItem("currentUser"));
 
   const handleClickOutside = (event) => {
@@ -53,7 +50,7 @@ const Home = () => {
   }, []);
 
   useEffect(() => {
-    if (currentUser.preference !== null) {
+    if (currentUser.role !== "admin") {
       dispatch(fetchBookByCategory(currentUser.preference));
     } else {
       dispatch(fetchBooks());
@@ -61,10 +58,12 @@ const Home = () => {
   }, []);
 
   useEffect(() => {
-    if (searchQuery !== "") {
-      dispatch(fetchBooks());
-    } else {
-      dispatch(fetchBookByCategory(currentUser.preference));
+    if (searchQuery === "") {
+      if (currentUser.role === "user") {
+        dispatch(fetchBookByCategory(currentUser.preference));
+      } else {
+        dispatch(fetchBooks());
+      }
     }
   }, [searchQuery]);
 
@@ -92,8 +91,6 @@ const Home = () => {
   const handleTextChange = (name) => {
     setSearchQuery(name);
   };
-
-  const [open, setOpen] = useState(true);
 
   return (
     <>

@@ -11,6 +11,7 @@ import PostBook from "./post-book";
 import { deleteBook, fetchBooks, updateBook } from "../redux/slices/booksSlice";
 import Input from "../components/input";
 import Loader from "../components/loader";
+import showSuccessToast from "../components/toast";
 
 const BookList = () => {
   const dispatch = useDispatch();
@@ -45,6 +46,8 @@ const BookList = () => {
     dispatch(deleteBook(id)).then((res) => {
       if (deleteBook.fulfilled.match(res)) {
         dispatch(fetchBooks());
+      } else if (deleteBook.rejected.match(res)) {
+        showSuccessToast({ icon: "error", title: res.payload.message });
       }
     });
   };
@@ -67,6 +70,7 @@ const BookList = () => {
     const updatedBook = { id, recommended: editRecommended, title: editName };
     dispatch(updateBook(updatedBook)).then((res) => {
       if (updateBook.fulfilled.match(res)) {
+        showSuccessToast({ icon: "success", title: res.payload.message });
         dispatch(fetchBooks());
         setEditRow(null);
       }

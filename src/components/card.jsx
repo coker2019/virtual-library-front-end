@@ -8,6 +8,7 @@ import {
   reserveBook,
 } from "../redux/slices/reservedBooksSlice";
 import { useDispatch } from "react-redux";
+import showSuccessToast from "./toast";
 
 const BookCard = ({
   book_album,
@@ -30,6 +31,7 @@ const BookCard = ({
     try {
       dispatch(borrowBook(id)).then((res) => {
         if (borrowBook.fulfilled.match(res)) {
+          showSuccessToast({ icon: "success", title: res.payload.message });
           dispatch(fetchBorrowedBooks());
         }
       });
@@ -42,6 +44,7 @@ const BookCard = ({
     try {
       dispatch(reserveBook(id)).then((res) => {
         if (reserveBook.fulfilled.match(res)) {
+          showSuccessToast({ icon: "success", title: res.payload.message });
           dispatch(fetchReservedBooks());
         }
       });
