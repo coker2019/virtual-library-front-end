@@ -35,6 +35,11 @@ const Header = () => {
       </div>
       <ul className="hidden md:flex">
         <div className="container gap-5 flex justify-between items-center">
+          <NavLink
+            to="/home"
+            className="flex items-center hover:border-b-2 hover:border-customGreen">
+            Home
+          </NavLink>
           {currentUser.role === "admin" && (
             <>
               <NavLink

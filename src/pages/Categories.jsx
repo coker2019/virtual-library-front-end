@@ -1,5 +1,4 @@
-import Header from "../components/Header";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Wrapper from "../components/wrapper";
 import Table from "../components/table";
@@ -8,19 +7,59 @@ import {
   TagIcon,
   TrashIcon,
 } from "@heroicons/react/24/outline";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import AddCategory from "./add-category";
+import {
+  fetchCategories,
+  removeCategory,
+  updateCategory,
+} from "../redux/slices/categoriesSlice";
+import Input from "../components/input";
 
 const Categories = () => {
   const [selectedCategory, setSelectedCategory] = useState("");
-  const navigate = useNavigate();
+  let [openModal, setOpenModal] = useState(false);
+  const [editRow, setEditRow] = useState(null);
+  const [editCategory, setEditCategory] = useState(null);
+  let categories = useSelector((state) => state.categories.categories);
+  const dispatch = useDispatch();
+
+  // const navigate = useNavigate();
+
+  const handleCategoryEdit = (id, name) => {
+    setEditRow(id);
+    setEditCategory(name);
+  };
 
   const handleCategoryChange = (e) => {
-    setSelectedCategory(e.target.value);
+    setEditCategory(e.target.value);
   };
 
-  const handleCategorySelect = () => {
-    navigate("/home", { state: { category: selectedCategory } });
+  const saveEditCategory = (id) => {
+    const updateCategoryData = { id, name: editCategory };
+    dispatch(updateCategory(updateCategoryData)).then((res) => {
+      if (updateCategory.fulfilled.match(res)) {
+        dispatch(fetchCategories());
+        setEditRow(null);
+      }
+    });
   };
+
+  const cancelEditCategory = () => {
+    setEditRow(null);
+  };
+
+  const handleOnclose = () => {
+    setOpenModal(false);
+  };
+
+  const handleOpen = () => {
+    setOpenModal(true);
+  };
+
+  useEffect(() => {
+    dispatch(fetchCategories());
+  }, [dispatch]);
 
   let tableHeads = [
     {
@@ -35,66 +74,115 @@ const Categories = () => {
     },
   ];
 
-  let categories = useSelector((state) => state.categories.categories);
+  const handleDeleteCategory = (id) => {
+    try {
+      dispatch(removeCategory(id)).then((res) => {
+        if (removeCategory.fulfilled.match(res)) {
+          dispatch(fetchCategories());
+        }
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
   return (
-    <Wrapper>
-      <div className="">
-        <div className="flex justify-between items-center">
-          <h5 className="text-2xl font-bold text-primaryGreen">
-            Category Manager
-          </h5>
+    <>
+      <AddCategory
+        onClose={handleOnclose}
+        isOpen={openModal}
+        setIsOpen={setOpenModal}
+        btn_text={"Add"}
+        title={"Add New Category"}
+      />
+      <Wrapper>
+        <div className="">
+          <div className="flex justify-between items-center">
+            <h5 className="text-2xl font-bold text-primaryGreen">
+              Category Manager
+            </h5>
 
-          <button className="p-3 bg-primaryGreen rounded-md text-white font-semibold shadow-lg hover:bg-customGreen hover:shadow-xl transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-customGreen cursor-pointer">
-            <div className="flex items-center">
-              <span>Add new Category</span> <TagIcon className="w-5 h-5 ml-2" />
-            </div>
-          </button>
-        </div>
-        <div className="mt-5">
-          <div className="w-full overflow-x-auto">
-            <div className="min-w-full overflow-hidden rounded-lg shadow-md">
-              <table className="min-w-full leading-normal">
-                <thead>
-                  <tr>
-                    {tableHeads.map((column) => (
-                      <th
-                        key={column.index}
-                        className="px-5 py-3   border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                        {column.name}
-                      </th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {categories &&
-                    categories.length > 0 &&
-                    categories.map((row, index) => (
-                      <tr key={row.id} className="hover:bg-gray-100">
-                        <td className="px-5 py-4 itext-center border-b border-gray-200 bg-white text-sm">
-                          {index + 1}
-                        </td>
-                        <td className="px-5  py-4 border-b border-gray-200 bg-white text-sm">
-                          {row.name}
-                        </td>
-                        <td className="px-5 text-center py-4 border-b border-gray-200 bg-white text-sm">
-                          <div className="flex w-100 justify-between">
-                            <button>
-                              <PencilSquareIcon className="w-6 h-6 text-primaryGreen" />
-                            </button>
-                            <button>
-                              <TrashIcon className="w-6 h-6 text-red-500" />
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
-                </tbody>
-              </table>
+            <button
+              onClick={() => handleOpen()}
+              className="p-3 bg-primaryGreen rounded-md text-white font-semibold shadow-lg hover:bg-customGreen hover:shadow-xl transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-customGreen cursor-pointer">
+              <div className="flex items-center">
+                <span>Add new Category</span>{" "}
+                <TagIcon className="w-5 h-5 ml-2" />
+              </div>
+            </button>
+          </div>
+          <div className="mt-5">
+            <div className="w-full overflow-x-auto">
+              <div className="min-w-full overflow-hidden rounded-lg shadow-md">
+                <table className="min-w-full leading-normal">
+                  <thead>
+                    <tr>
+                      {tableHeads.map((column) => (
+                        <th
+                          key={column.index}
+                          className="px-5 py-3   border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                          {column.name}
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {categories &&
+                      categories.length > 0 &&
+                      categories.map((row, index) => (
+                        <tr key={row.id} className="hover:bg-gray-100">
+                          <td className="px-5 py-4 itext-center border-b border-gray-200 bg-white text-sm">
+                            {index + 1}
+                          </td>
+                          <td className="px-5  py-4 border-b border-gray-200 bg-white text-sm">
+                            {editRow === row.id ? (
+                              <Input
+                                value={editCategory}
+                                onChange={handleCategoryChange}
+                              />
+                            ) : (
+                              <span className="text-sm"> {row.name}</span>
+                            )}
+                          </td>
+                          <td className="px-5 text-center py-4 border-b border-gray-200 bg-white text-sm">
+                            <div className="flex w-100 justify-between">
+                              {editRow === row.id ? (
+                                <>
+                                  <button
+                                    onClick={() => saveEditCategory(row.id)}>
+                                    Save
+                                  </button>
+                                  <button onClick={cancelEditCategory}>
+                                    Cancel
+                                  </button>
+                                </>
+                              ) : (
+                                <>
+                                  <button
+                                    onClick={() =>
+                                      handleCategoryEdit(row.id, row.name)
+                                    }>
+                                    <PencilSquareIcon className="w-6 h-6 text-primaryGreen" />
+                                  </button>
+                                  <button
+                                    onClick={() =>
+                                      handleDeleteCategory(row.id)
+                                    }>
+                                    <TrashIcon className="w-6 h-6 text-red-500" />
+                                  </button>
+                                </>
+                              )}
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </Wrapper>
+      </Wrapper>
+    </>
   );
 };
 

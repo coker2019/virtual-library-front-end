@@ -4,6 +4,7 @@ import axiosInstance from "../../utils/axios";
 const initialState = {
   categories: [],
   isLoading: false,
+  cat_id: null,
   error: false,
 };
 
@@ -21,39 +22,41 @@ export const fetchCategories = createAsyncThunk(
 
 export const addNewCategory = createAsyncThunk(
   "categories/addNewCategory",
-  async ({ rejectWithValue }) => {
+  async (category) => {
     try {
-      const response = await axiosInstance.post("categories");
+      const response = await axiosInstance.post("categories", {
+        name: category,
+      });
       return response.data;
     } catch (err) {
-      return rejectWithValue(err.response.data);
+      return err.response.data;
     }
   }
 );
 
 export const removeCategory = createAsyncThunk(
   "categories/removeCategory",
-  async ({ category_id, rejectWithValue }) => {
+  async (id) => {
     try {
-      let response = await axiosInstance.delete(`categories/${category_id}`);
+      let response = await axiosInstance.delete(`categories/${id}`);
       return response.data;
     } catch (err) {
-      return rejectWithValue(err.response.data);
+      return err.response.data;
     }
   }
 );
 
 export const updateCategory = createAsyncThunk(
   "categories/updateCategory",
-  async ({ updateCategoryData, rejectWithValue }) => {
+  async (updateCategoryData) => {
     try {
-      let response = await axiosInstance.patch(
-        "categories",
+      let response = await axiosInstance.put(
+        `categories/${updateCategoryData.id}`,
         updateCategoryData
       );
       return response.data;
     } catch (err) {
-      return rejectWithValue(err.payload.data);
+      return err.payload.data;
     }
   }
 );
@@ -61,7 +64,11 @@ export const updateCategory = createAsyncThunk(
 const categorySlice = createSlice({
   name: "category",
   initialState,
-  reducers: {},
+  reducers: {
+    setCategoryId: (state, action) => {
+      state.cat_id = action.payload;
+    },
+  },
 
   extraReducers: (builder) => {
     builder
@@ -71,6 +78,7 @@ const categorySlice = createSlice({
       .addCase(fetchCategories.fulfilled, (state, action) => {
         state.isLoading = false;
         state.categories = action.payload;
+        state.cat_id = null;
       })
       .addCase(fetchCategories.rejected, (state, action) => {
         state.isLoading = false;
@@ -124,5 +132,7 @@ const categorySlice = createSlice({
       });
   },
 });
+
+export const { setCategoryId } = categorySlice.actions;
 
 export default categorySlice.reducer;

@@ -1,0 +1,50 @@
+import React, { useEffect } from "react";
+import Modal from "../components/modal";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchBookByCategory } from "../redux/slices/booksSlice";
+import {
+  fetchCategories,
+  setCategoryId,
+} from "../redux/slices/categoriesSlice";
+import { selectedCategory } from "../redux/slices/authSlice";
+
+function SelectCategory({ isOpen, setIsOpen }) {
+  let dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchCategories());
+  }, [dispatch]);
+  let { categories, loading } = useSelector((state) => state.categories);
+  const handleSelectCategory = (id) => {
+    try {
+      dispatch(fetchBookByCategory(id)).then((res) => {
+        if (fetchBookByCategory.fulfilled.match(res)) {
+          dispatch(selectedCategory(true));
+          dispatch(setCategoryId(id));
+          setIsOpen(false);
+        }
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  return (
+    <Modal isOpen={isOpen} title={"Choose Category to continue"}>
+      <div className="grid grid-cols-6 gap-y-10 w-full">
+        {loading && <span>Loading...</span>}
+        {categories.length > 0 &&
+          categories.map((category) => (
+            <span
+              onClick={() => handleSelectCategory(category.id)}
+              className="text-[14px] font-bold opacity-60 cursor-pointer font-roboto text-primaryGreen"
+              key={category.id}>
+              {category.name}
+            </span>
+          ))}
+      </div>
+    </Modal>
+  );
+}
+
+export default SelectCategory;

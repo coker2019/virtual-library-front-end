@@ -29,16 +29,30 @@ export const fetchBookById = createAsyncThunk(
   }
 );
 
-export const fetchBookByCategory = createAsyncThunk(
-  "books/fetchBookByCategory",
-  async (category, { rejectWithValue }) => {
+export const fetchBookByTitle = createAsyncThunk(
+  "books/fetchBookByTItle",
+  async (title, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.get(
-        `/books/fetch_by_category/${category}`
+        `/books/fetch_by_title?title=${title}`
       );
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+export const fetchBookByCategory = createAsyncThunk(
+  "books/fetchBookByCategory",
+  async (category_id, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.get(
+        `books/fetch_by_category?category_id=${category_id}`
+      );
+      return response.data;
+    } catch (err) {
+      return rejectWithValue(err.response.data);
     }
   }
 );
@@ -111,15 +125,15 @@ const booksSlice = createSlice({
         state.loading = false;
         state.error = action.payload.error;
       })
-      .addCase(fetchBookByCategory.pending, (state) => {
+      .addCase(fetchBookByTitle.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(fetchBookByCategory.fulfilled, (state, action) => {
+      .addCase(fetchBookByTitle.fulfilled, (state, action) => {
         state.books = action.payload;
         state.loading = false;
       })
-      .addCase(fetchBookByCategory.rejected, (state, action) => {
+      .addCase(fetchBookByTitle.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload.error;
       })
@@ -160,6 +174,17 @@ const booksSlice = createSlice({
         state.loading = false;
       })
       .addCase(deleteBook.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload.error;
+      })
+      .addCase(fetchBookByCategory.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(fetchBookByCategory.fulfilled, (state, action) => {
+        state.loading = false;
+        state.books = action.payload;
+      })
+      .addCase(fetchBookByCategory.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload.error;
       });
