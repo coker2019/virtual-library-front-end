@@ -15,7 +15,7 @@ import showSuccessToast from "../components/toast";
 
 const BookList = () => {
   const dispatch = useDispatch();
-  const { books, loading, error } = useSelector((state) => state.books);
+  const { books, loading } = useSelector((state) => state.books);
   const [editRow, setEditRow] = useState(null);
   const [editRecommended, setEditRecommended] = useState(null);
   const [editName, setEditName] = useState("");
@@ -44,8 +44,10 @@ const BookList = () => {
   const handleDeleteBook = (id) => {
     dispatch(deleteBook(id)).then((res) => {
       if (deleteBook.fulfilled.match(res)) {
+        showSuccessToast({ icon: "success", title: res.payload.message });
         dispatch(fetchBooks());
       } else if (deleteBook.rejected.match(res)) {
+        console.log("response", res);
         showSuccessToast({ icon: "error", title: res.payload.message });
       }
     });
@@ -55,10 +57,6 @@ const BookList = () => {
     setEditRow(id);
     setEditRecommended(recommended);
     setEditName(name);
-  };
-
-  const handleRecommendedChange = (e) => {
-    setEditRecommended(e.target.value === "true");
   };
 
   const handleEditName = (e) => {
