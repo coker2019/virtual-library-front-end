@@ -95,21 +95,50 @@ const Header = () => {
             alt="nownow rider"
           />
         </div>
-        <ul className="p-8 text-2xl w-full">
-          <div className="text-lg font-bold container gap-5 flex flex-col justify-between items-center">
-            <NavLink to="/book-list" className="flex items-center">
-              List of Books
-            </NavLink>
-            {currentUser.role === "user" && (
-              <>
-                <NavLink to="/reserved-books" className="flex items-center">
-                  Reserved Books
-                </NavLink>
-                <NavLink to="/borrowed-books" className="flex items-center">
-                  Borrowed Books
-                </NavLink>
-              </>
-            )}
+        <ul className="p-8 w-full">
+          <div className="text-sm font-bold container gap-5 flex flex-col justify-between items-center">
+            <div className="container gap-5 flex flex-col">
+              <NavLink
+                to="/home"
+                className="flex items-center hover:border-b-2 hover:border-customGreen">
+                Home
+              </NavLink>
+              {currentUser.role === "admin" && (
+                <>
+                  <NavLink
+                    to="/books"
+                    className="flex items-center hover:border-b-2 hover:border-customGreen">
+                    Manage Books
+                  </NavLink>
+                  <NavLink
+                    to="/categories"
+                    className="flex items-center hover:border-b-2 hover:border-customGreen">
+                    Manage Categories
+                  </NavLink>
+                </>
+              )}
+              {currentUser.role === "user" && (
+                <>
+                  <NavLink
+                    to="/reserved-books"
+                    className="flex items-center hover:border-b-2 hover:border-customGreen">
+                    Reserved Books
+                  </NavLink>
+                  <NavLink
+                    to="/borrowed-books"
+                    className="flex items-center hover:border-b-2 hover:border-customGreen">
+                    Borrowed Books
+                  </NavLink>
+                </>
+              )}
+
+              {currentUser && (
+                <div className="flex items-center hover:border-b-2 hover:border-customGreen">
+                  <UserCircleIcon className="h-5 w-5" />
+                  <button onClick={() => handleSignout()}>Signout</button>
+                </div>
+              )}
+            </div>
           </div>
         </ul>
       </div>
