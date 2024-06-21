@@ -4,6 +4,7 @@ import { registerUser } from "../redux/slices/authSlice";
 import { Link, useNavigate } from "react-router-dom";
 import { fetchCategories } from "../redux/slices/categoriesSlice";
 import { fetchBooks } from "../redux/slices/booksSlice";
+import Swal from "sweetalert2";
 
 const Register = () => {
   const dispatch = useDispatch();
@@ -49,9 +50,15 @@ const Register = () => {
       })
     ).then((resultAction) => {
       if (registerUser.fulfilled.match(resultAction)) {
+        Swal.fire({
+          title: resultAction.payload.message,
+          timer: 4000,
+          icon: "success",
+          text: "Registration Completed successfully",
+        });
         dispatch(fetchCategories());
         dispatch(fetchBooks());
-        navigate("/home");
+        navigate("/login");
 
         setUserData({
           email: "",

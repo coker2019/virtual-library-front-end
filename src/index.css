@@ -52,3 +52,7 @@ body {
   background-color: #91b15695;
   cursor: not-allowed;
 }
+.swal2-confirm,
+.swal2-styled {
+  background-color: #607042 !important;
+}

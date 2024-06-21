@@ -19,10 +19,10 @@ export const registerUser = createAsyncThunk(
   async (userData, { rejectWithValue }) => {
     try {
       const response = await axios.post(BASE_URL, { user: userData });
-      const token = response.headers.authorization;
-      localStorage.setItem("token", token);
-      const currentUserData = JSON.stringify(response.data.status.data);
-      localStorage.setItem("currentUser", currentUserData);
+      // const token = response.headers.authorization;
+      // localStorage.setItem("token", token);
+      // const currentUserData = JSON.stringify(response.data.status.data);
+      // localStorage.setItem("currentUser", currentUserData);
       return response.data;
     } catch (error) {
       throw new Error(error.response.data.message);

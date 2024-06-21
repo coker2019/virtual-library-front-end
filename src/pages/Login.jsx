@@ -4,6 +4,7 @@ import { loginUser, updateLoginStatus } from "../redux/slices/authSlice";
 import { Link, useNavigate } from "react-router-dom";
 import { fetchCategories } from "../redux/slices/categoriesSlice";
 import { fetchBooks } from "../redux/slices/booksSlice";
+import Swal from "sweetalert2";
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -32,14 +33,18 @@ const Login = () => {
               : "failed"
           )
         );
-        dispatch(fetchCategories());
-        dispatch(fetchBooks());
-        navigate("/home");
-        setCredentials({
-          email: "",
-          password: "",
-        });
+        Swal.fire({
+          title: payload.message,
+          timer: 4000,
+          icon: "success",
+          text: "Login Process Completed",
+        }).then(navigate("/home"));
       }
+      dispatch(fetchCategories());
+      setCredentials({
+        email: "",
+        password: "",
+      });
     });
   };
 

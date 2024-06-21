@@ -10,6 +10,13 @@ import Loader from "../components/loader";
 
 const ReservedBooks = () => {
   const dispatch = useDispatch();
+
+  let currentDate = new Date();
+  let year = currentDate.getFullYear();
+  let month = String(currentDate.getMonth() + 1).padStart(2, "0"); // Months are zero-based
+  let day = String(currentDate.getDate()).padStart(2, "0");
+  let formattedDate = `${year}-${month}-${day}`;
+
   const { books, loading, error } = useSelector((state) => state.reservedBooks);
   useEffect(() => {
     dispatch(fetchReservedBooks());
@@ -24,6 +31,8 @@ const ReservedBooks = () => {
       console.log(err);
     }
   };
+
+  useEffect(() => {}, []);
   return (
     <Wrapper>
       <div className="">

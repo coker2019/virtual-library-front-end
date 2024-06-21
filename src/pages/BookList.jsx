@@ -28,7 +28,6 @@ const BookList = () => {
     { name: "S/N" },
     { name: "Book Detail" },
     { name: "Category" },
-    { name: "Recommended" },
     { name: "Action" },
   ];
 
@@ -157,21 +156,7 @@ const BookList = () => {
                             <td className="px-5 py-4 border-b border-gray-200 bg-white">
                               {row.category?.name}
                             </td>
-                            <td className="px-5 py-4 border-b border-gray-200 bg-white">
-                              {editRow === row.id ? (
-                                <select
-                                  value={editRecommended}
-                                  onChange={handleRecommendedChange}
-                                  className="form-select">
-                                  <option value="true">True</option>
-                                  <option value="false">False</option>
-                                </select>
-                              ) : row.recommended ? (
-                                "True"
-                              ) : (
-                                "False"
-                              )}
-                            </td>
+
                             <td className="px-5 py-4 border-b border-gray-200 bg-white">
                               <div className="flex justify-between">
                                 {editRow === row.id ? (

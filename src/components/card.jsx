@@ -73,9 +73,11 @@ const BookCard = ({
 
       <div className="flex justify-between p-3">
         {needed_else_where ? (
-          <button className="btn" onClick={any_btn}>
-            {btn_text}
-          </button>
+          any_btn && (
+            <button className="btn" onClick={any_btn}>
+              {btn_text}
+            </button>
+          )
         ) : (
           <>
             <button className="btn" onClick={() => handleReserve(book_id)}>

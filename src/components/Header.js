@@ -54,16 +54,20 @@ const Header = () => {
               </NavLink>
             </>
           )}
-          <NavLink
-            to="/reserved-books"
-            className="flex items-center hover:border-b-2 hover:border-customGreen">
-            Reserved Books
-          </NavLink>
-          <NavLink
-            to="/borrowed-books"
-            className="flex items-center hover:border-b-2 hover:border-customGreen">
-            Borrowed Books
-          </NavLink>
+          {currentUser.role === "user" && (
+            <>
+              <NavLink
+                to="/reserved-books"
+                className="flex items-center hover:border-b-2 hover:border-customGreen">
+                Reserved Books
+              </NavLink>
+              <NavLink
+                to="/borrowed-books"
+                className="flex items-center hover:border-b-2 hover:border-customGreen">
+                Borrowed Books
+              </NavLink>
+            </>
+          )}
 
           {currentUser && (
             <div className="flex items-center hover:border-b-2 hover:border-customGreen">
@@ -96,12 +100,16 @@ const Header = () => {
             <NavLink to="/book-list" className="flex items-center">
               List of Books
             </NavLink>
-            <NavLink to="/reserved-books" className="flex items-center">
-              Reserved Books
-            </NavLink>
-            <NavLink to="/borrowed-books" className="flex items-center">
-              Borrowed Books
-            </NavLink>
+            {currentUser.role === "user" && (
+              <>
+                <NavLink to="/reserved-books" className="flex items-center">
+                  Reserved Books
+                </NavLink>
+                <NavLink to="/borrowed-books" className="flex items-center">
+                  Borrowed Books
+                </NavLink>
+              </>
+            )}
           </div>
         </ul>
       </div>
