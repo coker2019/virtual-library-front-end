@@ -56,7 +56,7 @@ const Home = () => {
       } catch (err) {
         console.log(err);
       }
-    } else if (searchQuery.length > 4) {
+    } else if (searchQuery.length > 4 || currentUser.role === "admin") {
       dispatch(fetchBooks());
     }
   }, [searchQuery, dispatch]);
