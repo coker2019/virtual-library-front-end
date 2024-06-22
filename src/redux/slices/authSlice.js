@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
-const BASE_URL = "https://ebook-library-taol.onrender.com/users";
+const BASE_URL = "http://localhost:3000/users";
 
 const initialState = {
   isAuthenticated: null,
