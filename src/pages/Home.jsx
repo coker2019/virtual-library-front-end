@@ -11,12 +11,23 @@ import Wrapper from "../components/wrapper";
 import SelectCategory from "./select-categories";
 import Loader from "../components/loader";
 
+// Utility function to shuffle an array
+const shuffleArray = (array) => {
+  let shuffledArray = [...array];
+  for (let i = shuffledArray.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]];
+  }
+  return shuffledArray;
+};
+
 const Home = () => {
   const [searchQuery, setSearchQuery] = useState("");
   let dispatch = useDispatch();
-  const [showSearchHistory, setShowSearchHistory] = useState(false);
+  const [showSearchHistroy, setShowSearchHistory] = useState(false);
   const [searchData, setSearchData] = useState([]);
 
+  // Memoize the books from the Redux store
   const { books, loading } = useSelector((state) => state.books);
   const searchHistoryRef = useRef(null);
   let currentUser = JSON.parse(localStorage.getItem("currentUser"));
@@ -46,22 +57,22 @@ const Home = () => {
   }, []);
 
   useEffect(() => {
-    if (
-      currentUser.preference !== null &&
-      currentUser.role === "user" &&
-      searchQuery === ""
-    ) {
-      dispatch(fetchBookByCategory(currentUser.preference));
+    if (currentUser.preference !== null && searchQuery === "") {
+      try {
+        dispatch(fetchBookByCategory(currentUser.preference));
+      } catch (err) {
+        console.log(err);
+      }
     } else if (searchQuery.length > 4 || currentUser.role === "admin") {
       dispatch(fetchBooks());
     }
-  }, [dispatch, searchQuery]);
+  }, [searchQuery, dispatch]);
 
   const handleSearchInputChange = (e) => {
     setSearchQuery(e.target.value);
 
     let searchItems = books.filter((book) => {
-      return book.title.toLowerCase().includes(searchQuery.toLowerCase());
+      return book.title.toLowerCase().includes(searchQuery.toLocaleLowerCase());
     });
     setSearchData(searchItems);
   };
@@ -82,29 +93,20 @@ const Home = () => {
     setSearchQuery(name);
   };
 
-  const getRandomBooks = (booksArray, count) => {
-    const shuffled = booksArray.sort(() => 0.5 - Math.random());
-    return shuffled.slice(0, count);
-  };
-
-  const filterAndLimitRecommendedBooks = (books) => {
-    const recommendedBooks = books.filter((book) => book.recommended);
-    const limitedRecommendedBooks = getRandomBooks(recommendedBooks, 3);
-    const nonRecommendedBooks = books.filter((book) => !book.recommended);
-    return [...limitedRecommendedBooks, ...nonRecommendedBooks];
-  };
-
-  const filteredBooks = filterAndLimitRecommendedBooks(books);
+  const displayedBooks =
+    currentUser.preference !== null && searchQuery === ""
+      ? shuffleArray(books).slice(0, 3)
+      : books;
 
   return (
     <>
       <Wrapper>
         <div className="flex flex-col justify-center items-center gap-4">
-          <h1 className="text-3xl font-bold">Welcome to the Library</h1>
+          <h1 className="text-3xl  font-bold">Welcome to the Library</h1>
           <p className="text-lg">Explore our collection of books.</p>
 
           <div
-            className="bg-white flex w-full sm:w-3/4 md:w-1/2 lg:w-3/3 items-center border py-2 px-4 rounded-2xl relative"
+            className="bg-white flex w-full sm:w-3/4 md:w-1/2 lg:w-3/3 items-center border py-2 px-4  rounded-2xl relative"
             ref={searchHistoryRef}>
             <input
               type="text"
@@ -120,10 +122,10 @@ const Home = () => {
               onClick={() => handleSearchIconClick()}
             />
             <div
-              className={`flex absolute bg-white border-x p-4 rounded-b-2xl shadow-lg border-b w-full left-0 top-[35px] z-50 ${
-                showSearchHistory ? "block" : "hidden"
+              className={`flex absolute bg-white border-x p-4 rounded-b-2xl shadow-lg border-b w-full left-0 top-[35px] z-50  ${
+                showSearchHistroy ? "block" : "hidden"
               }`}>
-              <div className="flex flex-col gap-3">
+              <div className="flex  flex-col gap-3">
                 {searchData &&
                   searchData.length > 0 &&
                   searchData.map((data) => (
@@ -145,18 +147,15 @@ const Home = () => {
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mt-7 animate-fade-left animate-once animate-delay-[10ms]">
-              {Array.isArray(filteredBooks) &&
-                filteredBooks.length > 0 &&
-                filteredBooks.map((book) => (
+              {Array.isArray(displayedBooks) &&
+                displayedBooks.length > 0 &&
+                displayedBooks.map((book) => (
                   <BookCard
                     key={book.id}
                     book_album={book.image?.image_data}
                     book_author={book.author}
                     book_desc={book.description}
-                    recommended={
-                      currentUser.role !== "admin" && book.recommended
-                    }
-                    needed_else_where={currentUser.role === "admin"}
+                    recommended={book.recommended}
                     book_name={book.title}
                     book_id={book.id}
                     link={book.file_url}
