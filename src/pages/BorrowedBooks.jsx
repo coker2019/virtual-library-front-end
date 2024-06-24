@@ -32,7 +32,9 @@ const BorrowedBooks = () => {
   return (
     <Wrapper>
       <div className="">
-        <h1 className="text-2xl font-bold text-primaryGreen">Borrowed Books</h1>
+        <h1 className="text-2xl font-bold text-primaryGreen">
+          Downloaded Books
+        </h1>
         {loading ? (
           <div className="flex items-center justify-center">
             <Loader className="w-20 h-20" />
@@ -50,9 +52,6 @@ const BorrowedBooks = () => {
                 needed_else_where
                 btn_text={"Return"}
                 any_btn={() => handleReturnBoook(book.id)}
-                reserved
-                action={"Borrowed"}
-                date={book.due_date}
                 link={book?.book.file_url}
               />
             ))}

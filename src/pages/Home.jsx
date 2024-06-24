@@ -154,11 +154,18 @@ const Home = () => {
                     key={book.id}
                     book_album={book.image?.image_data}
                     book_author={book.author}
+                    book_read={book.reads}
                     book_desc={book.description}
-                    recommended={book.recommended}
+                    recommended={
+                      currentUser.role === "user" && book.recommended
+                    }
                     book_name={book.title}
                     book_id={book.id}
                     link={book.file_url}
+                    needed_else_where={currentUser.role === "admin"}
+                    isAdmin={currentUser.role === "admin"}
+                    downCount={book.downloads}
+                    readCount={book.reads}
                   />
                 ))}
             </div>
