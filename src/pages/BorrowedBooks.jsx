@@ -43,8 +43,8 @@ const BorrowedBooks = () => {
               book_desc={book?.book.description}
               book_id={book?.book.id}
               needed_else_where
-              // btn_text={"Return"}
-              // any_btn={() => handleReturnBoook(book.id)}
+              btn_text={"Return"}
+              any_btn={() => handleReturnBoook(book.id)}
               reserved
               action={"Borrowed"}
               date={book.due_date}

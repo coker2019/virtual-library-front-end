@@ -40,8 +40,8 @@ const ReservedBooks = () => {
               book_desc={book?.book.description}
               book_id={book?.book.id}
               needed_else_where
-              // btn_text={"Return"}
-              // any_btn={() => handleReturnReserve(book.id)}
+              btn_text={"Return"}
+              any_btn={() => handleReturnReserve(book.id)}
               reserved
               action={"Reserved"}
               date={book.reserved_until}
