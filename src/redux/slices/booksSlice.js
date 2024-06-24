@@ -71,6 +71,7 @@ export const uploadBook = createAsyncThunk("books/uploadBook", async (book) => {
 export const updateBook = createAsyncThunk(
   "books/updateBook",
   async (bookData, { rejectWithValue }) => {
+    console.log("book data", bookData);
     try {
       const response = await axiosInstance.put(
         `books/${bookData.id}`,
