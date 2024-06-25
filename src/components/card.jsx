@@ -65,16 +65,18 @@ const BookCard = ({
   };
 
   const handleDownload = async () => {
-    const isSecure = window.location.protocol === "https:";
-    const proxyUrl = isSecure
-      ? "https://cors-anywhere.herokuapp.com/"
-      : "http://cors-anywhere.herokuapp.com/";
-    const targetUrl = link;
+    const proxyUrl = "https://node-server-proxy.onrender.com/proxy?url=";
+    const targetUrl = encodeURIComponent(link);
 
     try {
       const response = await fetch(proxyUrl + targetUrl, {
         method: "GET",
+        headers: {},
       });
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok or the file is not a PDF");
+      }
       const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement("a");
