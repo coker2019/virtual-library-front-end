@@ -170,12 +170,12 @@ const BookCard = ({
       {isAdmin && (
         <div className="flex absolute bottom-1 right-2 gap-4 p-3">
           <div className="flex gap-1 items-center justify-center w-9 h-9  border-2 p-1  border-white border-dotted bg-primaryGreen rounded-full text-white">
-            <BookOpenIcon className="w-5 h-5" />
+            <BookOpenIcon className="w-10 h-10" />
             <span className="text-sm">{readCount}</span>
           </div>
-          <div className="flex items-center justify-center gap-1 p-1 bg-primaryGreen w-9 h-9 rounded-full text-white border-2 border-dotted border-white">
-            <ArrowDownIcon className="w-5 h-5" />
-            <span className="text-sm">{downCount}</span>
+          <div className="flex items-center justify-center p-1 bg-primaryGreen w-9 h-9 rounded-full text-white border-2 border-dotted border-white">
+            <ArrowDownIcon className="w-10 h-10" />
+            <span className="text-[12px]">{downCount}</span>
           </div>
         </div>
       )}
