@@ -65,8 +65,18 @@ const BookCard = ({
   };
 
   const handleDownload = async () => {
-    try {
-      const response = await fetch(link, { mode: "cors" });
+    //cors-anywhere.herokuapp.com/${url}`, {
+    ttps: try {
+      const response = await fetch(
+        `cors-anywhere.herokuapp.com/${link}`,
+        { mode: "cors" },
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/pdf",
+          },
+        }
+      );
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
