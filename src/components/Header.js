@@ -64,7 +64,7 @@ const Header = () => {
               <NavLink
                 to="/borrowed-books"
                 className="flex items-center hover:border-b-2 hover:border-customGreen">
-                Downloaded Books
+                Downloads
               </NavLink>
             </>
           )}
