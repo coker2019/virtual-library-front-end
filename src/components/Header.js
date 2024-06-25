@@ -61,11 +61,11 @@ const Header = () => {
                 className="flex items-center hover:border-b-2 hover:border-customGreen">
                 Reserved Books
               </NavLink>
-              <NavLink
+              {/* <NavLink
                 to="/borrowed-books"
                 className="flex items-center hover:border-b-2 hover:border-customGreen">
                 Downloads
-              </NavLink>
+              </NavLink> */}
             </>
           )}
 
@@ -124,11 +124,11 @@ const Header = () => {
                     className="flex items-center hover:border-b-2 hover:border-customGreen">
                     Reserved Books
                   </NavLink>
-                  <NavLink
+                  {/* <NavLink
                     to="/borrowed-books"
                     className="flex items-center hover:border-b-2 hover:border-customGreen">
                     Downloaded Books
-                  </NavLink>
+                  </NavLink> */}
                 </>
               )}
 
