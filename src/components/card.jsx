@@ -65,21 +65,16 @@ const BookCard = ({
   };
 
   const handleDownload = async () => {
-    //cors-anywhere.herokuapp.com/${url}`, {
-    ttps: try {
-      const response = await fetch(
-        `cors-anywhere.herokuapp.com/${link}`,
-        { mode: "cors" },
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/pdf",
-          },
-        }
-      );
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
+    const isSecure = window.location.protocol === "https:";
+    const proxyUrl = isSecure
+      ? "https://cors-anywhere.herokuapp.com/"
+      : "http://cors-anywhere.herokuapp.com/";
+    const targetUrl = link;
+
+    try {
+      const response = await fetch(proxyUrl + targetUrl, {
+        method: "GET",
+      });
       const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement("a");
