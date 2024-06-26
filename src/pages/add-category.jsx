@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Modal from "../components/modal";
 import Input from "../components/input";
 import { useDispatch, useSelector } from "react-redux";
@@ -6,11 +6,10 @@ import {
   addNewCategory,
   fetchCategories,
 } from "../redux/slices/categoriesSlice";
-import { fetchBooks, uploadBook } from "../redux/slices/booksSlice";
 
 const AddCategory = ({ id, isOpen, onClose, setIsOpen }) => {
   const dispatch = useDispatch();
-  const { categories, loading } = useSelector((state) => state.categories);
+  const { loading } = useSelector((state) => state.categories);
   let [category, setCategory] = useState("");
 
   const handleAddCategory = () => {

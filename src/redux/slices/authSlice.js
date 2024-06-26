@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
-const BASE_URL = "http://localhost:3000/users";
+const BASE_URL = "https://ebook-library-taol.onrender.com/users";
 
 const initialState = {
   isAuthenticated: null,
@@ -16,13 +16,9 @@ const initialState = {
 
 export const registerUser = createAsyncThunk(
   "user/registerUser",
-  async (userData, { rejectWithValue }) => {
+  async (userData) => {
     try {
       const response = await axios.post(BASE_URL, { user: userData });
-      const token = response.headers.authorization;
-      localStorage.setItem("token", token);
-      const currentUserData = JSON.stringify(response.data.status.data);
-      localStorage.setItem("currentUser", currentUserData);
       return response.data;
     } catch (error) {
       throw new Error(error.response.data.message);

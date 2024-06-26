@@ -4,14 +4,18 @@ import { registerUser } from "../redux/slices/authSlice";
 import { Link, useNavigate } from "react-router-dom";
 import { fetchCategories } from "../redux/slices/categoriesSlice";
 import { fetchBooks } from "../redux/slices/booksSlice";
+import Swal from "sweetalert2";
 
 const Register = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [displaySelect, setDisplaySelect] = useState(true);
+  let { categories, isLoading } = useSelector((state) => state.categories);
   const [userData, setUserData] = useState({
     email: "",
     password: "",
     confirmPassword: "",
+    preference: "",
     role: "user",
   });
   const [passwordError, setPasswordError] = useState("");
@@ -24,6 +28,7 @@ const Register = () => {
     if (type === "checkbox") {
       setIsAdmin(checked);
       setUserData({ ...userData, role: checked ? "admin" : "user" });
+      setDisplaySelect(!displaySelect);
     } else {
       setUserData({ ...userData, [name]: value });
     }
@@ -41,17 +46,25 @@ const Register = () => {
         email: userData.email,
         password: userData.password,
         role: userData.role,
+        preference: userData.preference,
       })
     ).then((resultAction) => {
       if (registerUser.fulfilled.match(resultAction)) {
+        Swal.fire({
+          title: resultAction.payload.message,
+          timer: 4000,
+          icon: "success",
+          text: "Registration Completed successfully",
+        });
         dispatch(fetchCategories());
         dispatch(fetchBooks());
-        navigate("/home");
+        navigate("/login");
 
         setUserData({
           email: "",
           password: "",
           confirmPassword: "",
+          preference: "",
         });
       }
     });
@@ -65,6 +78,13 @@ const Register = () => {
     return () => clearTimeout(timeout);
   }, [error]);
 
+  useEffect(() => {
+    try {
+      dispatch(fetchCategories());
+    } catch (err) {
+      console.log(err);
+    }
+  }, [dispatch]);
   return (
     <div className="bg-library-pattern bg-cover bg-center bg-no-repeat flex justify-center items-center min-h-screen bg-white">
       <div className="bg-[#f4f4f990] p-6 w-[80vw] lg:w-[30vw] md:w-[50vw] sm:w-[30vw] shadow-lg animate-fade-left animate-once">
@@ -112,6 +132,23 @@ const Register = () => {
               className="form-checkbox bg-red-500 text-primaryGreen focus:ring-primaryGreen focus:ring-2 rounded"
             />
           </div>
+
+          {displaySelect && (
+            <select
+              onChange={(e) =>
+                setUserData({ ...userData, preference: e.target.value })
+              }
+              className="py-3 px-2 bg-white border rounded-sm shadow-sm opacity-50 text-mute">
+              <option>Select your Preference</option>
+              {categories &&
+                categories.length > 0 &&
+                categories.map((itm) => (
+                  <option key={itm.id} value={itm.id}>
+                    {itm.name}
+                  </option>
+                ))}
+            </select>
+          )}
 
           <button
             type="submit"

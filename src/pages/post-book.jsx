@@ -7,7 +7,7 @@ import { fetchBooks, uploadBook } from "../redux/slices/booksSlice";
 
 const PostBook = ({ id, isOpen, onClose, setIsOpen }) => {
   const dispatch = useDispatch();
-  const { categories, isLoading } = useSelector((state) => state.categories);
+  const { categories } = useSelector((state) => state.categories);
   const bookloading = useSelector((state) => state.books.loading);
 
   useEffect(() => {
@@ -27,9 +27,18 @@ const PostBook = ({ id, isOpen, onClose, setIsOpen }) => {
     category_id: "",
     recommended: null,
   };
+  const [error, setError] = useState("");
   const [formData, setFormData] = useState(defaultFormData);
 
-  const [error, setError] = useState("");
+  useEffect(() => {
+    if (error) {
+      const errorTimer = setTimeout(() => {
+        setError("");
+      }, 3000);
+
+      return () => clearTimeout(errorTimer);
+    }
+  }, [error]);
 
   const handleChange = (e) => {
     const { value, name } = e.target;
@@ -67,13 +76,18 @@ const PostBook = ({ id, isOpen, onClose, setIsOpen }) => {
   };
 
   const handleAddNewBook = () => {
-    dispatch(uploadBook(formData)).then((res) => {
-      if (uploadBook.fulfilled.match(res)) {
-        dispatch(fetchBooks());
-        setIsOpen(false);
-        setFormData(defaultFormData);
-      }
-    });
+    const isFormValid = Object.values(formData).every((value) => value !== "");
+    if (isFormValid) {
+      dispatch(uploadBook(formData)).then((res) => {
+        if (uploadBook.fulfilled.match(res)) {
+          dispatch(fetchBooks());
+          setIsOpen(false);
+          setFormData(defaultFormData);
+        }
+      });
+    } else {
+      setError("All fields are required.");
+    }
   };
 
   return (
@@ -131,6 +145,7 @@ const PostBook = ({ id, isOpen, onClose, setIsOpen }) => {
           rows="3"
         />
         <Input
+          label="Upload Cover"
           type="file"
           accept=".jpg, .jpeg"
           onChange={handleImageChange}

@@ -15,13 +15,14 @@ import {
   updateCategory,
 } from "../redux/slices/categoriesSlice";
 import Input from "../components/input";
+import Loader from "../components/loader";
 
 const Categories = () => {
   const [selectedCategory, setSelectedCategory] = useState("");
   let [openModal, setOpenModal] = useState(false);
   const [editRow, setEditRow] = useState(null);
   const [editCategory, setEditCategory] = useState(null);
-  let categories = useSelector((state) => state.categories.categories);
+  let { categories, isLoading } = useSelector((state) => state.categories);
   const dispatch = useDispatch();
 
   // const navigate = useNavigate();
@@ -111,74 +112,80 @@ const Categories = () => {
             </button>
           </div>
           <div className="mt-5">
-            <div className="w-full overflow-x-auto">
-              <div className="min-w-full overflow-hidden rounded-lg shadow-md">
-                <table className="min-w-full leading-normal">
-                  <thead>
-                    <tr>
-                      {tableHeads.map((column) => (
-                        <th
-                          key={column.index}
-                          className="px-5 py-3   border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                          {column.name}
-                        </th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {categories &&
-                      categories.length > 0 &&
-                      categories.map((row, index) => (
-                        <tr key={row.id} className="hover:bg-gray-100">
-                          <td className="px-5 py-4 itext-center border-b border-gray-200 bg-white text-sm">
-                            {index + 1}
-                          </td>
-                          <td className="px-5  py-4 border-b border-gray-200 bg-white text-sm">
-                            {editRow === row.id ? (
-                              <Input
-                                value={editCategory}
-                                onChange={handleCategoryChange}
-                              />
-                            ) : (
-                              <span className="text-sm"> {row.name}</span>
-                            )}
-                          </td>
-                          <td className="px-5 text-center py-4 border-b border-gray-200 bg-white text-sm">
-                            <div className="flex w-100 justify-between">
-                              {editRow === row.id ? (
-                                <>
-                                  <button
-                                    onClick={() => saveEditCategory(row.id)}>
-                                    Save
-                                  </button>
-                                  <button onClick={cancelEditCategory}>
-                                    Cancel
-                                  </button>
-                                </>
-                              ) : (
-                                <>
-                                  <button
-                                    onClick={() =>
-                                      handleCategoryEdit(row.id, row.name)
-                                    }>
-                                    <PencilSquareIcon className="w-6 h-6 text-primaryGreen" />
-                                  </button>
-                                  <button
-                                    onClick={() =>
-                                      handleDeleteCategory(row.id)
-                                    }>
-                                    <TrashIcon className="w-6 h-6 text-red-500" />
-                                  </button>
-                                </>
-                              )}
-                            </div>
-                          </td>
-                        </tr>
-                      ))}
-                  </tbody>
-                </table>
+            {isLoading ? (
+              <div className="flex items-center justify-center">
+                <Loader className="w-20 h-20 text-primaryGreen" />
               </div>
-            </div>
+            ) : (
+              <div className="w-full overflow-x-auto">
+                <div className="min-w-full overflow-hidden rounded-lg shadow-md">
+                  <table className="min-w-full leading-normal">
+                    <thead>
+                      <tr>
+                        {tableHeads.map((column) => (
+                          <th
+                            key={column.index}
+                            className="px-5 py-3   border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                            {column.name}
+                          </th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {Array.isArray(categories) &&
+                        categories.length > 0 &&
+                        categories.map((row, index) => (
+                          <tr key={row.id} className="hover:bg-gray-100">
+                            <td className="px-5 py-4 itext-center border-b border-gray-200 bg-white text-sm">
+                              {index + 1}
+                            </td>
+                            <td className="px-5  py-4 border-b border-gray-200 bg-white text-sm">
+                              {editRow === row.id ? (
+                                <Input
+                                  value={editCategory}
+                                  onChange={handleCategoryChange}
+                                />
+                              ) : (
+                                <span className="text-sm"> {row.name}</span>
+                              )}
+                            </td>
+                            <td className="px-5 text-center py-4 border-b border-gray-200 bg-white text-sm">
+                              <div className="flex w-100 justify-between">
+                                {editRow === row.id ? (
+                                  <>
+                                    <button
+                                      onClick={() => saveEditCategory(row.id)}>
+                                      Save
+                                    </button>
+                                    <button onClick={cancelEditCategory}>
+                                      Cancel
+                                    </button>
+                                  </>
+                                ) : (
+                                  <>
+                                    <button
+                                      onClick={() =>
+                                        handleCategoryEdit(row.id, row.name)
+                                      }>
+                                      <PencilSquareIcon className="w-6 h-6 text-primaryGreen" />
+                                    </button>
+                                    <button
+                                      onClick={() =>
+                                        handleDeleteCategory(row.id)
+                                      }>
+                                      <TrashIcon className="w-6 h-6 text-red-500" />
+                                    </button>
+                                  </>
+                                )}
+                              </div>
+                            </td>
+                          </tr>
+                        ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </Wrapper>

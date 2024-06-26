@@ -30,14 +30,14 @@ function SelectCategory({ isOpen, setIsOpen }) {
   };
 
   return (
-    <Modal isOpen={isOpen} title={"Choose Category to continue"}>
-      <div className="grid grid-cols-6 gap-y-10 w-full">
+    <Modal isOpen={isOpen} title={"Choose a Category to continue"}>
+      <div className="grid grid-cols-6 gap-y-10 w-full border border-primaryGreen p-3">
         {loading && <span>Loading...</span>}
         {categories.length > 0 &&
           categories.map((category) => (
             <span
               onClick={() => handleSelectCategory(category.id)}
-              className="text-[14px] font-bold opacity-60 cursor-pointer font-roboto text-primaryGreen"
+              className="text-[14px] cursor-pointer font-roboto text-primaryGreen hover:text-black "
               key={category.id}>
               {category.name}
             </span>

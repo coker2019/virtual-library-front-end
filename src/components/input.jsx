@@ -23,7 +23,7 @@ const Input = ({
           rows={rows}
           required
           placeholder={placeholder}
-          className={`${className} p-2 border border-primaryGreen w-full rounded-sm shadow-sm`}
+          className={`${className} p-1 border border-primaryGreen w-full rounded-sm shadow-sm`}
           name={name}
           onChange={onChange}></textarea>
       ) : (
