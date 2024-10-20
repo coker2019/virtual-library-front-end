@@ -76,7 +76,23 @@ const PostBook = ({ id, isOpen, onClose, setIsOpen }) => {
   };
 
   const handleAddNewBook = () => {
-    const isFormValid = Object.values(formData).every((value) => value !== "");
+    const isValidUrl = (url) => {
+      try {
+        new URL(url);
+        return true;
+      } catch (_) {
+        return false;
+      }
+    };
+
+    const isFormValid =
+      Object.values(formData).every((value) => value !== "") &&
+      isValidUrl(formData.file_url);
+
+    if (!isValidUrl(formData.file_url)) {
+      setError("Invalid URL format.");
+      return;
+    }
     if (isFormValid) {
       dispatch(uploadBook(formData)).then((res) => {
         if (uploadBook.fulfilled.match(res)) {
@@ -115,7 +131,7 @@ const PostBook = ({ id, isOpen, onClose, setIsOpen }) => {
           onChange={handleChange}
         />
         <Input
-          type="text"
+          type="url"
           placeholder="Book url..."
           onChange={handleChange}
           value={formData.file_url}

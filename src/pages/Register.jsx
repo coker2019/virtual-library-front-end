@@ -10,7 +10,8 @@ const Register = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [displaySelect, setDisplaySelect] = useState(true);
-  let { categories, isLoading } = useSelector((state) => state.categories);
+  const { categories } = useSelector((state) => state.categories);
+  console.log("categories", categories);
   const [userData, setUserData] = useState({
     email: "",
     password: "",
@@ -140,13 +141,14 @@ const Register = () => {
               }
               className="py-3 px-2 bg-white border rounded-sm shadow-sm opacity-50 text-mute">
               <option>Select your Preference</option>
-              {categories &&
-                categories.length > 0 &&
-                categories.map((itm) => (
-                  <option key={itm.id} value={itm.id}>
-                    {itm.name}
-                  </option>
-                ))}
+              {categories
+                ? categories.length > 0 &&
+                  categories.map((itm) => (
+                    <option key={itm.id} value={itm.id}>
+                      {itm.name}
+                    </option>
+                  ))
+                : null}
             </select>
           )}
 

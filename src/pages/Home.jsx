@@ -95,7 +95,7 @@ const Home = () => {
 
   const displayedBooks =
     currentUser.preference !== null && searchQuery === ""
-      ? shuffleArray(books).slice(0, 3)
+      ? shuffleArray(books)?.slice(0, 3)
       : books;
 
   return (

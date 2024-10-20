@@ -49,9 +49,9 @@ const Modal = ({
 
           {btn_text && (
             <button
+              type="button"
+              onClick={() => btn_onClick()}
               disabled={loading}
-              type="submit"
-              onClick={btn_onClick}
               className="btn">
               {btn_text}
             </button>
