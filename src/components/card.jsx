@@ -1,9 +1,5 @@
 import React from "react";
 import {
-  borrowBook,
-  fetchBorrowedBooks,
-} from "../redux/slices/borrowedBooksSlice";
-import {
   fetchReservedBooks,
   reserveBook,
 } from "../redux/slices/reservedBooksSlice";
@@ -11,7 +7,6 @@ import { useDispatch } from "react-redux";
 import showSuccessToast from "./toast";
 import { ArrowDownIcon, BookOpenIcon } from "@heroicons/react/24/outline";
 import { updateBook } from "../redux/slices/booksSlice";
-import axios from "axios";
 
 const BookCard = ({
   book_album,
@@ -49,18 +44,21 @@ const BookCard = ({
 
   const handleNavigate = () => {
     if (link) {
-      dispatch(
-        updateBook({
-          id: book_id,
-          reads: (book_read += 1),
-        })
-      ).then((res) => {
-        if (updateBook.fulfilled.match(res)) {
-          window.open(link, "_blank");
+      try {
+        dispatch(
+          updateBook({
+            id: book_id,
+            reads: (book_read += 1),
+          })
+        );
+        if (updateBook.fulfilled) {
+          window.open(link);
         } else {
-          console.log("failed to read book");
+          throw new Error("failed to read book");
         }
-      });
+      } catch (error) {
+        throw new Error(error);
+      }
     }
   };
 
