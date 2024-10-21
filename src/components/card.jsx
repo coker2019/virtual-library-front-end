@@ -122,7 +122,7 @@ const BookCard = ({
           alt={`${book_name && book_name} album`}
         />
       </div>
-      <div className="p-3 h-[140px]">
+      <div className="p-3 h-[140px] overflow-hidden">
         <h5 className=" text-lg font-bold tracking-tight text-gray-900 white:text-dark">
           {book_name && book_name}
         </h5>
