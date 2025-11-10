@@ -133,14 +133,14 @@ const Categories = () => {
                     </thead>
                     <tbody>
                       {Array.isArray(categories) &&
-                        categories.length > 0 &&
-                        categories.map((row, index) => (
-                          <tr key={row.id} className="hover:bg-gray-100">
+                        categories?.length > 0 &&
+                        categories?.map((row, index) => (
+                          <tr key={row._id} className="hover:bg-gray-100">
                             <td className="px-5 py-4 itext-center border-b border-gray-200 bg-white text-sm">
                               {index + 1}
                             </td>
                             <td className="px-5  py-4 border-b border-gray-200 bg-white text-sm">
-                              {editRow === row.id ? (
+                              {editRow === row._id ? (
                                 <Input
                                   value={editCategory}
                                   onChange={handleCategoryChange}
@@ -151,10 +151,10 @@ const Categories = () => {
                             </td>
                             <td className="px-5 text-center py-4 border-b border-gray-200 bg-white text-sm">
                               <div className="flex w-100 justify-between">
-                                {editRow === row.id ? (
+                                {editRow === row._id ? (
                                   <>
                                     <button
-                                      onClick={() => saveEditCategory(row.id)}>
+                                      onClick={() => saveEditCategory(row._id)}>
                                       Save
                                     </button>
                                     <button onClick={cancelEditCategory}>
@@ -165,13 +165,13 @@ const Categories = () => {
                                   <>
                                     <button
                                       onClick={() =>
-                                        handleCategoryEdit(row.id, row.name)
+                                        handleCategoryEdit(row._id, row.name)
                                       }>
                                       <PencilSquareIcon className="w-6 h-6 text-primaryGreen" />
                                     </button>
                                     <button
                                       onClick={() =>
-                                        handleDeleteCategory(row.id)
+                                        handleDeleteCategory(row._id)
                                       }>
                                       <TrashIcon className="w-6 h-6 text-red-500" />
                                     </button>

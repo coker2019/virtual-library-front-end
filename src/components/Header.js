@@ -11,21 +11,16 @@ const Header = () => {
   let dispatch = useDispatch();
   const navigate = useNavigate();
   const storedUserData = localStorage.getItem("currentUser");
-  const currentUser = JSON.parse(storedUserData);
+  const tempUser = JSON.parse(storedUserData);
+  const currentUser = tempUser?.user;
 
   const handleNav = () => {
     setNav(!nav);
   };
 
   const handleSignout = () => {
-    dispatch(logoutUser()).then((resultAction) => {
-      if (logoutUser.fulfilled.match(resultAction)) {
-        localStorage.removeItem("token");
-        localStorage.removeItem("currentUser");
-        dispatch(resetUserState());
-        navigate("/login");
-      }
-    });
+    dispatch(logoutUser());
+    navigate("/login", { replace: true });
   };
 
   return (
@@ -54,7 +49,7 @@ const Header = () => {
               </NavLink>
             </>
           )}
-          {currentUser.role === "user" && (
+          {currentUser.role === "reader" && (
             <>
               <NavLink
                 to="/reserved-books"
@@ -103,7 +98,7 @@ const Header = () => {
                 className="flex items-center hover:border-b-2 hover:border-customGreen">
                 Home
               </NavLink>
-              {currentUser.role === "admin" && (
+              {currentUser?.role === "admin" && (
                 <>
                   <NavLink
                     to="/books"
@@ -117,7 +112,7 @@ const Header = () => {
                   </NavLink>
                 </>
               )}
-              {currentUser.role === "user" && (
+              {currentUser?.role === "reader" && (
                 <>
                   <NavLink
                     to="/reserved-books"

@@ -31,7 +31,6 @@ const Home = () => {
   const { books, loading } = useSelector((state) => state.books);
   const searchHistoryRef = useRef(null);
   let currentUser = JSON.parse(localStorage.getItem("currentUser"));
-
   const handleClickOutside = (event) => {
     if (
       searchHistoryRef.current &&
@@ -57,23 +56,30 @@ const Home = () => {
   }, []);
 
   useEffect(() => {
-    if (currentUser.preference !== null && searchQuery === "") {
-      try {
-        dispatch(fetchBookByCategory(currentUser.preference));
-      } catch (err) {
-        console.log(err);
-      }
-    } else if (searchQuery.length > 4 || currentUser.role === "admin") {
-      dispatch(fetchBooks());
-    }
-  }, [searchQuery, dispatch]);
+    // if (currentUser.preference !== null && searchQuery === "") {
+    //   try {
+    //     dispatch
+    //     dispatch(fetchBookByCategory(currentUser.preference));
+    //   } catch (err) {
+    //     console.log(err);
+    //   }
+    // } else if (searchQuery.length > 4 || currentUser.role === "admin") {
+    //   dispatch(fetchBooks());
+    // }
+    dispatch(fetchBooks());
+  }, [searchData, dispatch]);
 
   const handleSearchInputChange = (e) => {
     setSearchQuery(e.target.value);
 
-    let searchItems = books.filter((book) => {
-      return book.title.toLowerCase().includes(searchQuery.toLocaleLowerCase());
-    });
+    let searchItems =
+      books?.length > 0
+        ? books.filter((book) => {
+            return book.title
+              .toLowerCase()
+              .includes(searchQuery.toLocaleLowerCase());
+          })
+        : [];
     setSearchData(searchItems);
   };
 
@@ -151,17 +157,17 @@ const Home = () => {
                 displayedBooks.length > 0 &&
                 displayedBooks.map((book) => (
                   <BookCard
-                    key={book.id}
-                    book_album={book.image?.image_data}
+                    key={book._id}
+                    book_album={book.coverImage?.url}
                     book_author={book.author}
                     book_read={book.reads}
                     book_desc={book.description}
                     recommended={
-                      currentUser.role === "user" && book.recommended
+                      currentUser.role === "reader" && book.recommended
                     }
                     book_name={book.title}
-                    book_id={book.id}
-                    link={book.file_url}
+                    book_id={book._id}
+                    link={book.src}
                     needed_else_where={currentUser.role === "admin"}
                     isAdmin={currentUser.role === "admin"}
                     downCount={book.downloads}

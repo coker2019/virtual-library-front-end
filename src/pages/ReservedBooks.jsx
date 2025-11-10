@@ -18,6 +18,7 @@ const ReservedBooks = () => {
   let formattedDate = `${year}-${month}-${day}`;
 
   const { books, loading, error } = useSelector((state) => state.reservedBooks);
+  console.log("books", books);
   useEffect(() => {
     dispatch(fetchReservedBooks());
   }, [dispatch]);
@@ -32,7 +33,6 @@ const ReservedBooks = () => {
     }
   };
 
-  useEffect(() => {}, []);
   return (
     <Wrapper>
       <div className="">
@@ -43,23 +43,24 @@ const ReservedBooks = () => {
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mt-4">
-            {books.map((book) => (
-              <BookCard
-                key={book.id}
-                book_album={book?.book.image.image_data}
-                book_author={book?.book.author}
-                book_name={book?.book.title}
-                book_desc={book?.book.description}
-                book_id={book?.book.id}
-                needed_else_where
-                btn_text={"Delete"}
-                any_btn={() => handleReturnReserve(book.id)}
-                reserved
-                action={"Reserved"}
-                date={book.reserved_until}
-                link={book.book.file_url}
-              />
-            ))}
+            {books.length > 0 &&
+              books?.map((book) => (
+                <BookCard
+                  key={book?._id}
+                  book_album={book?.book.coverImage.url}
+                  book_author={book?.book.author}
+                  book_name={book?.book.title}
+                  book_desc={book?.book.description}
+                  book_id={book?.book._id}
+                  needed_else_where
+                  btn_text={"Remove"}
+                  any_btn={() => handleReturnReserve(book._id)}
+                  reserved
+                  action={"Reserved"}
+                  date={book.end_reservation_date}
+                  link={book.book.src}
+                />
+              ))}
           </div>
         )}
       </div>

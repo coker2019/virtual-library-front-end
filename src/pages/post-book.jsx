@@ -22,9 +22,9 @@ const PostBook = ({ id, isOpen, onClose, setIsOpen }) => {
     title: "",
     author: "",
     description: "",
-    file_url: "",
-    image_file: "",
-    category_id: "",
+    src: "",
+    coverImage: "",
+    category: "",
     recommended: null,
   };
   const [error, setError] = useState("");
@@ -59,27 +59,20 @@ const PostBook = ({ id, isOpen, onClose, setIsOpen }) => {
   };
 
   const handleImageChange = (e) => {
-    if (validateImgSize(e)) {
-      const file = e.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = (event) => {
-          const imageUrl = event.target.result;
-          setFormData((formData) => ({
-            ...formData,
-            image_file: `${imageUrl}`, // Assuming formData is state or a variable that holds your form data
-          }));
-        };
-        reader.readAsDataURL(file);
-      }
-    }
+    const file = e.target.files[0];
+    setFormData({
+      ...formData,
+      coverImage: file,
+    });
   };
 
   const handleAddNewBook = () => {
     const isFormValid = Object.values(formData).every((value) => value !== "");
     if (isFormValid) {
+      console.log("formData", formData);
       dispatch(uploadBook(formData)).then((res) => {
-        if (uploadBook.fulfilled.match(res)) {
+        console.log("res", res);
+        if (res.payload.status === "success") {
           dispatch(fetchBooks());
           setIsOpen(false);
           setFormData(defaultFormData);
@@ -118,19 +111,19 @@ const PostBook = ({ id, isOpen, onClose, setIsOpen }) => {
           type="text"
           placeholder="Book url..."
           onChange={handleChange}
-          value={formData.file_url}
-          name="file_url"
+          value={formData.src}
+          name="src"
         />
         <select
           onChange={(e) =>
-            setFormData({ ...formData, category_id: e.target.value })
+            setFormData({ ...formData, category: e.target.value })
           }
           className="py-3 px-2 bg-white border rounded-sm shadow-sm opacity-50 text-mute">
           <option>Select Category</option>
           {categories &&
             categories.length > 0 &&
             categories.map((itm) => (
-              <option key={itm.id} value={itm.id}>
+              <option key={itm._id} value={itm._id}>
                 {itm.name}
               </option>
             ))}
@@ -149,7 +142,7 @@ const PostBook = ({ id, isOpen, onClose, setIsOpen }) => {
           type="file"
           accept=".jpg, .jpeg"
           onChange={handleImageChange}
-          name="image_file"
+          name="coverImage"
         />
         {error && <p className="text-red-500 text-sm">{error}</p>}
       </div>

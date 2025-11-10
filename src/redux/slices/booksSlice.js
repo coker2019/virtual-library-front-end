@@ -8,10 +8,10 @@ const initialState = {
   error: null,
 };
 
-export const fetchBooks = createAsyncThunk("books/fetchBooks", async () => {
+export const fetchBooks = createAsyncThunk("books", async () => {
   try {
-    const response = await axiosInstance.get("books");
-    return response.data;
+    const response = await axiosInstance.get("book");
+    return response.data.books;
   } catch (error) {
     return error.response.data;
   }
@@ -21,7 +21,7 @@ export const fetchBookById = createAsyncThunk(
   "books/fetchBookById",
   async (bookId, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.get(`/books/${bookId}`);
+      const response = await axiosInstance.get(`/book/${bookId}`);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -32,11 +32,11 @@ export const fetchBookById = createAsyncThunk(
 export const fetchBookByTitle = createAsyncThunk(
   "books/fetchBookByTItle",
   async (title, { rejectWithValue }) => {
+    console.log("title", title);
     try {
-      const response = await axiosInstance.get(
-        `/books/fetch_by_title?title=${title}`
-      );
-      return response.data;
+      const response = await axiosInstance.get(`/book/search?title=${title}`);
+      console.log("response", response);
+      return response.data.books;
     } catch (error) {
       return rejectWithValue(error.response.data);
     }
@@ -48,9 +48,9 @@ export const fetchBookByCategory = createAsyncThunk(
   async (category_id, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.get(
-        `books/fetch_by_category?category_id=${category_id}`
+        `/book/search?category=${category_id}`
       );
-      return response.data;
+      return response.data.books;
     } catch (err) {
       return rejectWithValue(err.response.data);
     }
@@ -59,9 +59,10 @@ export const fetchBookByCategory = createAsyncThunk(
 
 export const uploadBook = createAsyncThunk("books/uploadBook", async (book) => {
   try {
-    const response = await axiosInstance.post("books", {
-      book,
+    const response = await axiosInstance.post("book", book, {
+      headers: { "Content-Type": "multipart/form-data" },
     });
+    console.log("response", response);
     return response.data;
   } catch (error) {
     return error.response.data;
@@ -70,13 +71,11 @@ export const uploadBook = createAsyncThunk("books/uploadBook", async (book) => {
 
 export const updateBook = createAsyncThunk(
   "books/updateBook",
-  async (bookData, { rejectWithValue }) => {
-    console.log("book data", bookData);
+  async ({ id, data }, { rejectWithValue }) => {
+    console.log("data", data);
     try {
-      const response = await axiosInstance.put(
-        `books/${bookData.id}`,
-        bookData
-      );
+      const response = await axiosInstance.put(`book/${id}`, data);
+      console.log("response", response);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -87,10 +86,12 @@ export const updateBook = createAsyncThunk(
 export const deleteBook = createAsyncThunk(
   "books/deleteBook",
   async (bookId, { rejectWithValue }) => {
+    console.log("bookId", bookId);
     try {
-      const response = await axiosInstance.delete(`/books/${bookId}`);
+      const response = await axiosInstance.delete(`/book/${bookId}`);
       return response.data;
     } catch (error) {
+      console.log("error", error);
       return rejectWithValue(error.response.data);
     }
   }
@@ -112,8 +113,9 @@ const booksSlice = createSlice({
       })
       .addCase(fetchBooks.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload.error;
-      })
+        state.error = action.payload;
+      });
+    builder
       .addCase(fetchBookById.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -125,7 +127,8 @@ const booksSlice = createSlice({
       .addCase(fetchBookById.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload.error;
-      })
+      });
+    builder
       .addCase(fetchBookByTitle.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -137,7 +140,8 @@ const booksSlice = createSlice({
       .addCase(fetchBookByTitle.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload.error;
-      })
+      });
+    builder
       .addCase(uploadBook.pending, (state) => {
         state.loading = true;
       })
@@ -148,7 +152,8 @@ const booksSlice = createSlice({
       .addCase(uploadBook.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload.error;
-      })
+      });
+    builder
       .addCase(updateBook.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -163,7 +168,8 @@ const booksSlice = createSlice({
       .addCase(updateBook.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload.error;
-      })
+      });
+    builder
       .addCase(deleteBook.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -177,7 +183,8 @@ const booksSlice = createSlice({
       .addCase(deleteBook.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload.message;
-      })
+      });
+    builder
       .addCase(fetchBookByCategory.pending, (state) => {
         state.loading = true;
       })

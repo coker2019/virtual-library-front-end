@@ -10,7 +10,7 @@ import {
 import { useDispatch } from "react-redux";
 import showSuccessToast from "./toast";
 import { ArrowDownIcon, BookOpenIcon } from "@heroicons/react/24/outline";
-import { updateBook } from "../redux/slices/booksSlice";
+import { fetchBooks, updateBook } from "../redux/slices/booksSlice";
 import axios from "axios";
 
 const BookCard = ({
@@ -49,13 +49,17 @@ const BookCard = ({
 
   const handleNavigate = () => {
     if (link) {
+      console.log("link", link);
       dispatch(
         updateBook({
           id: book_id,
-          reads: (book_read += 1),
+          data: { reads: book_read + 1 },
         })
       ).then((res) => {
+        console.log("res", res);
         if (updateBook.fulfilled.match(res)) {
+          dispatch(fetchBooks());
+
           window.open(link, "_blank");
         } else {
           console.log("failed to read book");
@@ -93,6 +97,7 @@ const BookCard = ({
           downloads: (downCount += 1),
         })
       );
+      dispatch(fetchBooks());
       showSuccessToast({ icon: "success", title: "Download successful" });
     } catch (error) {
       console.error("Download failed:", error);
@@ -106,10 +111,11 @@ const BookCard = ({
   const handleReserve = (id) => {
     try {
       dispatch(reserveBook(id)).then((res) => {
-        if (reserveBook.fulfilled.match(res)) {
-          showSuccessToast({ icon: "success", title: res.payload.message });
-          dispatch(fetchReservedBooks());
-        }
+        // console.log("res from reserve book", res);
+        // if (reserveBook.fulfilled.match(res)) {
+        //   showSuccessToast({ icon: "success", title: res.payload.message });
+        //   dispatch(fetchReservedBooks());
+        // }
       });
     } catch (err) {
       console.log(err);

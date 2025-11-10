@@ -28,9 +28,7 @@ const Login = () => {
       if (loginUser.fulfilled.match(resultAction)) {
         dispatch(
           updateLoginStatus(
-            payload.status.message === "Signed in Successfully"
-              ? "success"
-              : "failed"
+            payload.status.message === "success" ? "success" : "failed"
           )
         );
         Swal.fire({
@@ -66,7 +64,9 @@ const Login = () => {
             Login Your Account
           </h1>
           {showErr && showErr !== null && (
-            <p className="text-red-500 text-sm">{showErr}</p>
+            <p className="text-red-500 text-sm text-center fw-bold">
+              {showErr}
+            </p>
           )}
           <input
             type="email"

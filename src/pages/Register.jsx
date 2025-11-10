@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { registerUser } from "../redux/slices/authSlice";
+import { registerNewUser } from "../redux/slices/authSlice";
 import { Link, useNavigate } from "react-router-dom";
 import { fetchCategories } from "../redux/slices/categoriesSlice";
 import { fetchBooks } from "../redux/slices/booksSlice";
@@ -15,8 +15,8 @@ const Register = () => {
     email: "",
     password: "",
     confirmPassword: "",
-    preference: "",
-    role: "user",
+    preferredCategories: "",
+    role: "reader",
   });
   const [passwordError, setPasswordError] = useState("");
   const { loading, error } = useSelector((state) => state.auth);
@@ -27,7 +27,7 @@ const Register = () => {
     const { name, value, type, checked } = e.target;
     if (type === "checkbox") {
       setIsAdmin(checked);
-      setUserData({ ...userData, role: checked ? "admin" : "user" });
+      setUserData({ ...userData, role: checked ? "admin" : "reader" });
       setDisplaySelect(!displaySelect);
     } else {
       setUserData({ ...userData, [name]: value });
@@ -40,16 +40,18 @@ const Register = () => {
       setPasswordError("Passwords do not match");
       return;
     }
+
     setPasswordError("");
     dispatch(
-      registerUser({
+      registerNewUser({
         email: userData.email,
         password: userData.password,
         role: userData.role,
-        preference: userData.preference,
+        preferredCategories: userData.preferredCategories,
       })
     ).then((resultAction) => {
-      if (registerUser.fulfilled.match(resultAction)) {
+      console.log("resultAction", resultAction);
+      if (registerNewUser.fulfilled.match(resultAction)) {
         Swal.fire({
           title: resultAction.payload.message,
           timer: 4000,
@@ -64,11 +66,25 @@ const Register = () => {
           email: "",
           password: "",
           confirmPassword: "",
-          preference: "",
+          preferredCategories: "",
         });
       }
     });
   };
+
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  //   dispatch(
+  //     registerNewUser({
+  //       email: userData.email,
+  //       password: userData.password,
+  //       role: userData.role,
+  //       preferredCategories: userData.preferredCategories,
+  //     })
+  //   ).then((res) => {
+  //     console.log("res", res);
+  //   });
+  // };
 
   useEffect(() => {
     if (error !== null) {
@@ -88,7 +104,7 @@ const Register = () => {
   return (
     <div className="bg-library-pattern bg-cover bg-center bg-no-repeat flex justify-center items-center min-h-screen bg-white">
       <div className="bg-[#f4f4f990] p-6 w-[80vw] lg:w-[30vw] md:w-[50vw] sm:w-[30vw] shadow-lg animate-fade-left animate-once">
-        <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
+        <form className="flex flex-col gap-4" onSubmit={(e) => handleSubmit(e)}>
           <h1 className="text-xl font-bold text-center mb-4">Register</h1>
           {err && <p className="text-red-500 text-sm">{err}</p>}
           {passwordError && <p className="text-red-500">{passwordError}</p>}
@@ -136,14 +152,17 @@ const Register = () => {
           {displaySelect && (
             <select
               onChange={(e) =>
-                setUserData({ ...userData, preference: e.target.value })
+                setUserData({
+                  ...userData,
+                  preferredCategories: e.target.value,
+                })
               }
               className="py-3 px-2 bg-white border rounded-sm shadow-sm opacity-50 text-mute">
               <option>Select your Preference</option>
               {categories &&
-                categories.length > 0 &&
-                categories.map((itm) => (
-                  <option key={itm.id} value={itm.id}>
+                categories?.length > 0 &&
+                categories?.map((itm) => (
+                  <option key={itm._id} value={itm._id}>
                     {itm.name}
                   </option>
                 ))}

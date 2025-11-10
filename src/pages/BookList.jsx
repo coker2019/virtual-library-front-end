@@ -64,7 +64,11 @@ const BookList = () => {
   };
 
   const saveEditBook = (id) => {
-    const updatedBook = { id, recommended: editRecommended, title: editName };
+    const updatedBook = {
+      id,
+      data: { recommended: editRecommended, title: editName },
+    };
+    console.log("updatedBook", updatedBook);
     dispatch(updateBook(updatedBook)).then((res) => {
       if (updateBook.fulfilled.match(res)) {
         showSuccessToast({ icon: "success", title: res.payload.message });
@@ -130,13 +134,13 @@ const BookList = () => {
                       {books &&
                         books.length > 0 &&
                         books.map((row, index) => (
-                          <tr key={row.id} className="hover:bg-gray-100">
+                          <tr key={row._id} className="hover:bg-gray-100">
                             <td className="px-5 py-4 border-b border-gray-200 bg-white text-sm">
                               {index + 1}
                             </td>
                             <td className="px-5 py-4 border-b border-gray-200 bg-white">
                               <div className="flex justify-between">
-                                {editRow === row.id ? (
+                                {editRow === row._id ? (
                                   <Input
                                     value={editName}
                                     onChange={handleEditName}
@@ -145,7 +149,7 @@ const BookList = () => {
                                   <span className="text-sm">{row.title}</span>
                                 )}
                                 <img
-                                  src={row.image?.image_data}
+                                  src={row.coverImage?.url}
                                   className="w-10 h-10"
                                   alt={row.name}
                                 />
@@ -157,10 +161,10 @@ const BookList = () => {
 
                             <td className="px-5 py-4 border-b border-gray-200 bg-white">
                               <div className="flex justify-between">
-                                {editRow === row.id ? (
+                                {editRow === row._id ? (
                                   <>
                                     <button
-                                      onClick={() => saveEditBook(row.id)}>
+                                      onClick={() => saveEditBook(row._id)}>
                                       Save
                                     </button>
                                     <button onClick={cancelEditBook}>
@@ -172,7 +176,7 @@ const BookList = () => {
                                     <button
                                       onClick={() =>
                                         handleEditBook(
-                                          row.id,
+                                          row._id,
                                           row.recommended,
                                           row.title
                                         )
@@ -180,7 +184,7 @@ const BookList = () => {
                                       <PencilSquareIcon className="w-6 h-6 text-primaryGreen" />
                                     </button>
                                     <button
-                                      onClick={() => handleDeleteBook(row.id)}>
+                                      onClick={() => handleDeleteBook(row._id)}>
                                       <TrashIcon className="w-6 h-6 text-red-500" />
                                     </button>
                                   </>

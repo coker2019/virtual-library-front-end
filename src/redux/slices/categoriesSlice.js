@@ -12,7 +12,7 @@ export const fetchCategories = createAsyncThunk(
   "categories/fetchCategories",
   async () => {
     try {
-      const response = await axiosInstance.get("categories");
+      const response = await axiosInstance.get("category");
       return response.data;
     } catch (error) {
       return error.response.data;
@@ -24,7 +24,7 @@ export const addNewCategory = createAsyncThunk(
   "categories/addNewCategory",
   async (category) => {
     try {
-      const response = await axiosInstance.post("categories", {
+      const response = await axiosInstance.post("category", {
         name: category,
       });
       return response.data;
@@ -38,7 +38,7 @@ export const removeCategory = createAsyncThunk(
   "categories/removeCategory",
   async (id) => {
     try {
-      let response = await axiosInstance.delete(`categories/${id}`);
+      let response = await axiosInstance.delete(`category/${id}`);
       return response.data;
     } catch (err) {
       return err.response.data;
@@ -49,9 +49,10 @@ export const removeCategory = createAsyncThunk(
 export const updateCategory = createAsyncThunk(
   "categories/updateCategory",
   async (updateCategoryData) => {
+    console.log("updateCategoryData", updateCategoryData);
     try {
       let response = await axiosInstance.put(
-        `categories/${updateCategoryData.id}`,
+        `category/${updateCategoryData.id}`,
         updateCategoryData
       );
       return response.data;
