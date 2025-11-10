@@ -1,17 +1,9 @@
 import React from "react";
-import {
-  fetchReservedBooks,
-  reserveBook,
-} from "../redux/slices/reservedBooksSlice";
+import { reserveBook } from "../redux/slices/reservedBooksSlice";
 import { useDispatch } from "react-redux";
 import showSuccessToast from "./toast";
 import { ArrowDownIcon, BookOpenIcon } from "@heroicons/react/24/outline";
-<<<<<<< HEAD
 import { fetchBooks, updateBook } from "../redux/slices/booksSlice";
-import axios from "axios";
-=======
-import { updateBook } from "../redux/slices/booksSlice";
->>>>>>> 9b6eae7af3836c1c260ec4f6bc96c3087c19cbc0
 
 const BookCard = ({
   book_album,
@@ -130,7 +122,7 @@ const BookCard = ({
         />
       </div>
       <div className="p-3 h-[140px] overflow-hidden">
-        <h5 className=" text-lg font-bold tracking-tight text-gray-900 white:text-dark">
+        <h5 className="text-lg font-bold tracking-tight text-gray-900 dark:text-white">
           {book_name && book_name}
         </h5>
         <h5 className="text-gray-800">{book_author && book_author}</h5>

@@ -5,7 +5,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { images } from "../Assets";
 import { useDispatch } from "react-redux";
 import { UserCircleIcon } from "@heroicons/react/24/outline";
-import { logoutUser, resetUserState } from "../redux/slices/authSlice";
+import { logoutUser } from "../redux/slices/authSlice";
 const Header = () => {
   const [nav, setNav] = useState(false);
   let dispatch = useDispatch();
