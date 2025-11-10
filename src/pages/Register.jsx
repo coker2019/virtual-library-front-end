@@ -10,7 +10,8 @@ const Register = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [displaySelect, setDisplaySelect] = useState(true);
-  let { categories, isLoading } = useSelector((state) => state.categories);
+  const { categories } = useSelector((state) => state.categories);
+  console.log("categories", categories);
   const [userData, setUserData] = useState({
     email: "",
     password: "",

@@ -1,17 +1,17 @@
 import React from "react";
 import {
-  borrowBook,
-  fetchBorrowedBooks,
-} from "../redux/slices/borrowedBooksSlice";
-import {
   fetchReservedBooks,
   reserveBook,
 } from "../redux/slices/reservedBooksSlice";
 import { useDispatch } from "react-redux";
 import showSuccessToast from "./toast";
 import { ArrowDownIcon, BookOpenIcon } from "@heroicons/react/24/outline";
+<<<<<<< HEAD
 import { fetchBooks, updateBook } from "../redux/slices/booksSlice";
 import axios from "axios";
+=======
+import { updateBook } from "../redux/slices/booksSlice";
+>>>>>>> 9b6eae7af3836c1c260ec4f6bc96c3087c19cbc0
 
 const BookCard = ({
   book_album,
@@ -49,22 +49,21 @@ const BookCard = ({
 
   const handleNavigate = () => {
     if (link) {
-      console.log("link", link);
-      dispatch(
-        updateBook({
-          id: book_id,
-          data: { reads: book_read + 1 },
-        })
-      ).then((res) => {
-        console.log("res", res);
-        if (updateBook.fulfilled.match(res)) {
-          dispatch(fetchBooks());
-
-          window.open(link, "_blank");
+      try {
+        dispatch(
+          updateBook({
+            id: book_id,
+            reads: (book_read += 1),
+          })
+        );
+        if (updateBook.fulfilled) {
+          window.open(link);
         } else {
-          console.log("failed to read book");
+          throw new Error("failed to read book");
         }
-      });
+      } catch (error) {
+        throw new Error(error);
+      }
     }
   };
 
@@ -130,7 +129,7 @@ const BookCard = ({
           alt={`${book_name && book_name} album`}
         />
       </div>
-      <div className="p-3 h-[140px]">
+      <div className="p-3 h-[140px] overflow-hidden">
         <h5 className=" text-lg font-bold tracking-tight text-gray-900 white:text-dark">
           {book_name && book_name}
         </h5>
